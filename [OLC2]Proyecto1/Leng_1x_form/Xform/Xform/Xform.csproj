@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analizador\Errors.cs" />
+    <Compile Include="Analizador\Gramatica.cs" />
     <Compile Include="Analizador\Gramaticas.cs" />
     <Compile Include="Analizador\Reporte.cs" />
     <Compile Include="Analizador\Sintactico.cs" />

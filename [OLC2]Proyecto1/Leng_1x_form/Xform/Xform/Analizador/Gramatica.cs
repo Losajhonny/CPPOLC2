@@ -22,7 +22,10 @@ namespace Xform.Analizador
                                                     "max", "pow", "log", "log10", "abs",
                                                     "sin", "cos", "tan", "sqrt", "pi",
                                                     "hoy", "ahora", "imagen", "video", "audio",
-                                                    "verdadero", "falso", "nulo" };
+                                                    "verdadero", "falso", "nulo", "imprimir", "repetir",
+                                                    "hasta", "hacer", "mientras", "para", "si",
+                                                    "sino", "caso", "valor", "default", "retorno",
+                                                    "continuar", "romper", "de" };
         
         #region NO TERMINALES
         NonTerminal INI = new NonTerminal("INI"),
@@ -87,7 +90,9 @@ namespace Xform.Analizador
             SINO_SI = new NonTerminal("SINO_SI"),
             CASOS_VALORES = new NonTerminal("CASOS_VALORES"),
             CASO_DEFECTO = new NonTerminal("CASO_DEFECTO"),
-            CASO_VALOR = new NonTerminal("CASO_VALOR");
+            CASO_VALOR = new NonTerminal("CASO_VALOR"),
+            HACER = new NonTerminal("HACER"),
+            DIMENSION = new NonTerminal("DIMENSION");
 
             
         #endregion
@@ -95,12 +100,89 @@ namespace Xform.Analizador
         public Gramatica()
             : base(false)
         {
-            
+            #region EXPRESIONES REGULARES
+	        #endregion
+
+            #region TERMINALES
+            /* PALABRAS RESERVADAS */
+            KeyTerm pr_importar = ToTerm("importar"),
+                pr_clase = ToTerm("clase"),
+                pr_publico = ToTerm("publico"),
+                pr_privado = ToTerm("privado"),
+                pr_protegido = ToTerm("protegido"),
+                pr_padre = ToTerm("padre"),
+                pr_formulario = ToTerm("formulario"),
+                pr_super = ToTerm("super"),
+                pr_principal = ToTerm("principal"),
+                pr_nuevo = ToTerm("nuevo"),
+                pr_vacio = ToTerm("vacio"),
+                pr_cadena = ToTerm("cadena"),
+                pr_entero = ToTerm("entero"),
+                pr_decimal = ToTerm("decimal"),
+                pr_fecha = ToTerm("fecha"),
+                pr_hora = ToTerm("hora"),
+                pr_fechahora = ToTerm("fechahora"),
+                pr_booleano = ToTerm("booleano"),
+                pr_respuestas = ToTerm("respuestas"),
+                pr_este = ToTerm("este"),
+                pr_subcad = ToTerm("subcad"),
+                pr_poscad = ToTerm("poscad"),
+                pr_retorno = ToTerm("retorno"),
+                pr_default = ToTerm("default"),
+                pr_valor = ToTerm("valor"),
+                pr_caso = ToTerm("caso"),
+                pr_sino = ToTerm("sino"),
+                pr_si = ToTerm("si"),
+                pr_mientras = ToTerm("mientras"),
+                pr_para = ToTerm("para"),
+                pr_hacer = ToTerm("hacer"),
+                pr_repetir = ToTerm("repetir"),
+                pr_hasta = ToTerm("hasta"),
+                pr_imprimir = ToTerm("imprimir"),
+                pr_romper = ToTerm("romper"),
+                pr_continuar = ToTerm("continuar"),
+                pr_verdadero = ToTerm("verdadero"),
+                pr_falso = ToTerm("falso"),
+                pr_audio = ToTerm("audio"),
+                pr_video = ToTerm("video"),
+                pr_imagen = ToTerm("imagen"),
+                pr_ahora = ToTerm("ahora"),
+                pr_hoy = ToTerm("hoy"),
+                pr_tam = ToTerm("tam"),
+                pr_random = ToTerm("random"),
+                pr_min = ToTerm("min"),
+                pr_max = ToTerm("max"),
+                pr_pow = ToTerm("pow"),
+                pr_log = ToTerm("log"),
+                pr_log10 = ToTerm("log10"),
+                pr_abs = ToTerm("abs"),
+                pr_sin = ToTerm("sin"),
+                pr_cos = ToTerm("cos"),
+                pr_tan = ToTerm("tan"),
+                pr_sqrt = ToTerm("sqrt"),
+                pr_pi = ToTerm("pi")
+                ;
+
+
+
+            /* TOKENS */
+            KeyTerm parizq = ToTerm("("),
+                parder = ToTerm(")"),
+                tk_ptcoma = ToTerm(";"),
+                llaizq = ToTerm("{"),
+                llader = ToTerm("}"),
+                tk_punto = ToTerm("."),
+                tk_mas = ToTerm("+"),
+                tk_menos = ToTerm("-"),
+                tk_por = ToTerm("*"),
+                tk_div = ToTerm("/");
+            #endregion
+
             INI.Rule = IMPORTACIONES + CLASES;
 
             /* IMPORTACIONES */
             IMPORTACIONES.Rule = MakeStarRule(IMPORTACIONES, IMPORTACION);
-            IMPORTACION.Rule = pr_importar + parizq + id + punto + id + parder + tk_ptcoma;
+            IMPORTACION.Rule = pr_importar + parizq + id + tk_punto + id + parder + tk_ptcoma;
 
 
 
@@ -186,7 +268,7 @@ namespace Xform.Analizador
 
 
             /* METODO */
-            METODO.Rule = VISIBILIDAD + TIPO_RETORNO + id + parizq + LISTA_PARAMETROS + parder + llaizq + SENTENCIAS + llader
+            METODO.Rule = VISIBILIDAD + TIPO_RETORNO + id + parizq + LISTA_PARAMETROS + parder + llaizq + SENTENCIAS + llader;
 
 
 
