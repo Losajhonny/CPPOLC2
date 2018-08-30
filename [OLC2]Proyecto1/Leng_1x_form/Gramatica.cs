@@ -1,6 +1,6 @@
 /* IMPORTACIONES */
 IMPORTACIONES.Rule = MakeStarRule(IMPORTACIONES, IMPORTACION);
-IMPORTACION.Rule = pr_importar + parizq + id + punto + id + parder + ptcoma;
+IMPORTACION.Rule = pr_importar + parizq + id + punto + id + parder + tk_ptcoma;
 
 
 
@@ -45,11 +45,17 @@ FUNCION.Rule = CONSTRUCTOR
 			| PRINCIPAL
 			| METODO
 			| DECLARACIONES + tk_ptcoma
-			| /* PLANTILLA */
+			| PLANTILLA
 			;
 
 
 
+
+//por el momoento no tomar en cuenta la plantiila
+PLANTILLA.Rule = FORMULARIO
+			;
+
+FORMULARIO.Rule = pr_formulario + id + llaizq + FUNCIONES + llader;
 
 
 
@@ -57,7 +63,7 @@ FUNCION.Rule = CONSTRUCTOR
 
 
 /* CONSTRUCTOR */
-CONSTRUCTOR.Rule = id + parizq + LISTA_PARAMETROS + parder + llaizq + SUPER +  /* SENTENCIAS */ + llader;
+CONSTRUCTOR.Rule = id + parizq + LISTA_PARAMETROS + parder + llaizq + SUPER +  SENTENCIAS + llader;
 /* FUNCION SUPER DEL METODO CONSTRUCTOR */
 SUPER.Rule = pr_super + parizq + LISTA_VAL_PARAMETROS + parder
 		| Empty
@@ -69,15 +75,17 @@ SUPER.Rule = pr_super + parizq + LISTA_VAL_PARAMETROS + parder
 
 
 /* METODO PRINCIPAL */
-PRINCIPAL.Rule = pr_principal + parizq + LISTA_PARAMETROS + parder + llaizq + /* SENTENCIAS */ + llader;
+PRINCIPAL.Rule = pr_principal + parizq + LISTA_PARAMETROS + parder + llaizq + SENT_PRINCIPAL + llader;
 
 
-
+SENT_PRINCIPAL.Rule = SENTENCIAS
+					| pr_nuevo + id + parizq + parder + tk_punto + id + tk_ptcoma
+					;
 
 
 
 /* METODO */
-METODO.Rule = VISIBILIDAD + TIPO_RETORNO + id + parizq + LISTA_PARAMETROS + parder + llaizq + /* SENTENCIAS */ + llader
+METODO.Rule = VISIBILIDAD + TIPO_RETORNO + id + parizq + LISTA_PARAMETROS + parder + llaizq + SENTENCIAS + llader
 
 
 
@@ -98,6 +106,7 @@ TIPO_DATO.Rule = pr_cadena
             | pr_fecha
             | pr_hora
             | pr_fechahora
+            | pr_respuestas
             | id
             ;
 
@@ -113,8 +122,8 @@ EXPRESION.Rule = ARITMETICA
 			| LOGICA
 			| OPERADOR
 			| FACTOR
-			| parizq + EXPRESION + parder
 			| LLAMADAS
+			| parizq + EXPRESION + parder
 			;
 
 ARITMETICA.Rule = EXPRESION + tk_mas + EXPRESION
@@ -149,8 +158,7 @@ OPERADOR.Rule = tk_dmas + EXPRESION
 FACTOR.Rule = cadena
 			| entero
 			| ddecimal
-			| pr_verdadero
-			| pr_falso
+			| VBOOLEANO
 			| fecha
 			| hora
 			| fechahora
@@ -165,7 +173,7 @@ FACTOR.Rule = cadena
 LLAMADAS.Rule = MLLAMADAS;
 			|  NLLAMADAS; // llamdas de funciones nativas
 
-MLLAMADA.Rule = MakePlusRule(MLLAMADA, tk_punto, LLAMADA);
+MLLAMADAS.Rule = MakePlusRule(MLLAMADAS, tk_punto, LLAMADA);
 
 LLAMADA.Rule = id + parizq + LISTA_VAL_PARAMETROS + parder //llamada a una clase
 			| id + ACC_DIMENSIONES 				//llamada a un arreglo
@@ -176,6 +184,8 @@ LLAMADA.Rule = id + parizq + LISTA_VAL_PARAMETROS + parder //llamada a una clase
 NLLAMADAS.Rule = NATIVA_CADENA
 			| NATIVA_BOOLEANA
 			| NATIVA_NUMERICA
+			| NATIVA_FECHAHORA
+			| NATIVA_MULTIMEDIA
 			;
 
 NATIVA_CADENA.Rule = pr_cadena + parizq + EXPRESION + parder 	// fun nat cadena
@@ -190,8 +200,36 @@ NATIVA_NUMERICA.Rule = pr_entero + parizq + LISTA_VAL_PARAMETROS + parder // ARG
 				| pr_random + parizq + LISTA_VAL_PARAMETROS + parder
 				| pr_min + parizq + LISTA_VAL_PARAMETROS + parder
 				| pr_max + parizq + LISTA_VAL_PARAMETROS + parder
-				
+				| pr_pow + parizq + EXPRESION + tk_coma + entero + parder
+				| pr_log + parizq + EXPRESION + parder
+				| pr_log10 + parizq + EXPRESION + parder
+				| pr_abs + parizq + EXPRESION + parder
+				| pr_sin + parizq + EXPRESION + parder
+				| pr_cos + parizq + EXPRESION + parder
+				| pr_tan + parizq + EXPRESION + parder
+				| pr_sqrt + parizq + EXPRESION + parder
+				| pr_pi + parizq + parder
 				;
+
+NATIVA_FECHAHORA.Rule = pr_hoy + parizq + parder
+					| pr_ahora + parizq + parder
+					| pr_fecha + parizq + cadena + parder
+					| pr_hora + parizq + cadena + parder
+					| pr_fechahora + parizq + cadena + parder
+					;
+
+NATIVA_MULTIMEDIA.Rule = pr_imagen + parizq + EXPRESION + tk_coma + VBOOLEANO
+					| pr_video + parizq + EXPRESION + tk_coma + VBOOLEANO
+					| pr_audio + parizq + EXPRESION + tk_coma + VBOOLEANO
+					;
+
+VBOOLEANO.Rule = pr_verdadero
+			|	pr_falso
+			;
+
+
+
+
 
 
 /* LISTA DE PARAMETROS ( PARAMETRO )*/
@@ -218,9 +256,9 @@ ASIG_DIMENSIONES.Rule = llaizq + ASIG_DIMENSION + llader;
 ASIG_DIMENSION.Rule = ASIG_DIMENSION_U
                | ASIG_DIMENSION_M;
 
-ASIG_DIMENSION_U.Rule = MakeStarRule(ASIG_DIMENSION_U, coma, EXPRESION);
+ASIG_DIMENSION_U.Rule = MakeStarRule(ASIG_DIMENSION_U, tk_coma, EXPRESION);
 
-ASIG_DIMENSION_M.Rule = MakeStarRule(ASIG_DIMENSION_M, coma, ASIG_DIMENSIONES);
+ASIG_DIMENSION_M.Rule = MakeStarRule(ASIG_DIMENSION_M, tk_coma, ASIG_DIMENSIONES);
 
 
 
@@ -292,10 +330,10 @@ HACER.Rule = pr_hacer + llaizq + SENTENCIAS + llader + pr_mientras + parizq + EX
 
 
 /* PARA */
-PARA.Rule = pr_para + parizq + VAR_CONTROL + ptcoma + EXPRESION + ptcoma + EXPRESION + parder + llaizq + SENTENCIAS + llader;
+PARA.Rule = pr_para + parizq + VAR_CONTROL + tk_ptcoma + EXPRESION + tk_ptcoma + EXPRESION + parder + llaizq + SENTENCIAS + llader;
 
 VAR_CONTROL.Rule = ASIGNACION
-			| DECLARACION
+			| DECLARACIONES
             ;
 
 
@@ -312,11 +350,11 @@ SENT_SI.Rule = SI
             | SI + SINO
             ;
 
-SI.Rule = pr_si + parizq + EXPRESION + parder + llaizq + SENTS + llader;
+SI.Rule = pr_si + parizq + EXPRESION + parder + llaizq + SENTENCIAS + llader;
 
 SINO_SI.Rule = pr_sino + SI;
 
-SINO.Rule = pr_sino + llaizq + SENTS + llader;
+SINO.Rule = pr_sino + llaizq + SENTENCIAS + llader;
 
 VARIOS_SINO_SI.Rule = MakePlusRule(VARIOS_SINO_SI, SINO_SI);
 
@@ -328,9 +366,9 @@ CASOS.Rule = pr_caso + parizq + EXPRESION + parder + pr_de + llaizq + CASOS_VALO
 
 CASOS_VALORES.Rule = MakePlusRule(CASOS_VALORES, CASO_VALOR);
 
-CASO_VALOR.Rule = pr_valor + EXPRESION + dospuntos + llaizq + SENTS + llader;
+CASO_VALOR.Rule = pr_valor + EXPRESION + dospuntos + llaizq + SENTENCIAS + llader;
 
-CASO_DEFECTO.Rule = pr_default + dospuntos + llaizq + SENTS + llader
+CASO_DEFECTO.Rule = pr_default + dospuntos + llaizq + SENTENCIAS + llader
 				| Empty;
 
 

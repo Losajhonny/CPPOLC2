@@ -11,12 +11,12 @@ namespace Xform.Analizador
 {
     class Sintactico
     {
-        private string grafo;
+        private static string grafo;
         private static List<Errors> error = new List<Errors>();
 
         public static ParseTreeNode analizar(string entrada)
         {
-            Gramatica gramatica = new Gramatica();
+            Gramaticas gramatica = new Gramaticas();
             Parser parser = new Parser(gramatica);
             ParseTree arbol = parser.Parse(entrada);
             error.Clear();

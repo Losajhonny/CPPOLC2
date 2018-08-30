@@ -12,3 +12,16 @@ C:\Users\jhonny\Desktop\Proyecto[OLC2]\Proyecto1\Xform\Xform\obj\Debug\Xform.csp
 C:\Users\jhonny\Desktop\Proyecto[OLC2]\Proyecto1\Xform\Xform\obj\Debug\Xform.exe
 C:\Users\jhonny\Desktop\Proyecto[OLC2]\Proyecto1\Xform\Xform\obj\Debug\Xform.pdb
 C:\Users\jhonny\Desktop\Proyecto[OLC2]\Proyecto1\Xform\Xform\obj\Debug\Xform.Gui.Principal.resources
+C:\Users\jhonny\Desktop\Github\CPPOLC2\[OLC2]Proyecto1\Leng_1x_form\Xform\Xform\bin\Debug\Xform.exe.config
+C:\Users\jhonny\Desktop\Github\CPPOLC2\[OLC2]Proyecto1\Leng_1x_form\Xform\Xform\obj\Debug\Xform.exe
+C:\Users\jhonny\Desktop\Github\CPPOLC2\[OLC2]Proyecto1\Leng_1x_form\Xform\Xform\obj\Debug\Xform.pdb
+C:\Users\jhonny\Desktop\Github\CPPOLC2\[OLC2]Proyecto1\Leng_1x_form\Xform\Xform\obj\Debug\Xform.csprojResolveAssemblyReference.cache
+C:\Users\jhonny\Desktop\Github\CPPOLC2\[OLC2]Proyecto1\Leng_1x_form\Xform\Xform\obj\Debug\Xform.Gui.Principal.resources
+C:\Users\jhonny\Desktop\Github\CPPOLC2\[OLC2]Proyecto1\Leng_1x_form\Xform\Xform\obj\Debug\Xform.Properties.Resources.resources
+C:\Users\jhonny\Desktop\Github\CPPOLC2\[OLC2]Proyecto1\Leng_1x_form\Xform\Xform\obj\Debug\Xform.csproj.GenerateResource.Cache
+C:\Users\jhonny\Desktop\Github\CPPOLC2\[OLC2]Proyecto1\Leng_1x_form\Xform\Xform\bin\Debug\Xform.exe
+C:\Users\jhonny\Desktop\Github\CPPOLC2\[OLC2]Proyecto1\Leng_1x_form\Xform\Xform\bin\Debug\Xform.pdb
+C:\Users\jhonny\Desktop\Github\CPPOLC2\[OLC2]Proyecto1\Leng_1x_form\Xform\Xform\bin\Debug\Irony.dll
+C:\Users\jhonny\Desktop\Github\CPPOLC2\[OLC2]Proyecto1\Leng_1x_form\Xform\Xform\bin\Debug\Irony.Interpreter.dll
+C:\Users\jhonny\Desktop\Github\CPPOLC2\[OLC2]Proyecto1\Leng_1x_form\Xform\Xform\bin\Debug\Irony.pdb
+C:\Users\jhonny\Desktop\Github\CPPOLC2\[OLC2]Proyecto1\Leng_1x_form\Xform\Xform\bin\Debug\Irony.Interpreter.pdb

@@ -7,409 +7,477 @@ using System.Threading.Tasks;
 
 namespace Xform.Analizador
 {
+    /// <summary>
+    /// universidad:    @ USAC
+    /// autor :         @ Jhonatan Lopez
+    /// carnet:         @ 201325583
+    /// </summary>
     class Gramatica : Grammar
     {
-        public static string[] palabras_reservadas = { "importar", "cadena", "booleano", "entero", "decimal", "fecha", "hora", "fechahora", "respuestas", "si",
-                                           "sino", "vacio", "caso", "de", "valor", "default", "para", "repetir", "hasta", "hacer", 
-                                           "mientras", "imprimir", "continuar", "romper", "retorno", "publico", "privado", "protegido", "nuevo", "nulo",
-                                           "este", "super", "principal", "clase", "padre", "formulario", "pregunta", "grupo"};
-        #region EXPRESIONES REGULARES
-        CommentTerminal line = new CommentTerminal("LINE", "$$", "\n");
-        CommentTerminal multiline = new CommentTerminal("MULTI_LINE", "$#", "#$");
-        NumberLiteral entero = new NumberLiteral("ENTERO");
-        RegexBasedTerminal edecimal = new RegexBasedTerminal("DECIMAL", @"[0-9]+[\.][0-9]+");
-        RegexBasedTerminal cadena = new RegexBasedTerminal("CADENA", "[\"]([^\"\n]|[\\\"]|[\\\n])*[\"]");
-        RegexBasedTerminal boolean = new RegexBasedTerminal("BOOLEAN", "verdadero|falso");
-        RegexBasedTerminal id = new RegexBasedTerminal("ID", "[a-zA-Z]([a-zA-Z0-9]|[_])*");
-        RegexBasedTerminal hora = new RegexBasedTerminal("HORA", "([\"][0-9][0-9][:][0-9][0-9][:][0-9][0-9][\"]|[\'][0-9][0-9][:][0-9][0-9][:][0-9][0-9][\'])");
-        RegexBasedTerminal fecha = new RegexBasedTerminal("FECHA", "([\"][0-9][0-9][/][0-9][0-9][/][0-9][0-9][0-9][0-9][\"]|[\'][0-9][0-9][/][0-9][0-9][/][0-9][0-9][0-9][0-9][\'])");
-        RegexBasedTerminal fechahora = new RegexBasedTerminal("FECHAHORA", "([\"][0-9][0-9][/][0-9][0-9][/][0-9][0-9][0-9][0-9][ ][0-9][0-9][:][0-9][0-9][:][0-9][0-9][\"]|[\'][0-9][0-9][/][0-9][0-9][/][0-9][0-9][0-9][0-9][ ][0-9][0-9][:][0-9][0-9][:][0-9][0-9][\'])");
-        #endregion
+        public static string[] palabras_reservadas = { "importar", "clase", "publico", "privado", "protegido",
+                                                    "padre", "formulario", "super", "principal", "nuevo",
+                                                    "vacio", "cadena", "booleano", "entero", "decimal",
+                                                    "fecha", "hora", "fechahora", "respuestas", "este",
+                                                    "subcad", "poscad", "tam", "random", "min",
+                                                    "max", "pow", "log", "log10", "abs",
+                                                    "sin", "cos", "tan", "sqrt", "pi",
+                                                    "hoy", "ahora", "imagen", "video", "audio",
+                                                    "verdadero", "falso", "nulo" };
+        
+        #region NO TERMINALES
+        NonTerminal INI = new NonTerminal("INI"),
+            IMPORTACIONES = new NonTerminal("IMPORTACIONES"),
+            IMPORTACION = new NonTerminal("IMPORTACION"),
+            CLASES = new NonTerminal("CLASES"),
+            CLASE = new NonTerminal("CLASE"),
+            VISIBILIDAD = new NonTerminal("VISIBILIDAD"),
+            HERENCIA = new NonTerminal("HERENCIA"),
+            FUNCIONES = new NonTerminal("FUNCIONES"),
+            FUNCION = new NonTerminal("FUNCION"),
+            CONSTRUCTOR = new NonTerminal("CONSTRUCTOR"),
+            PRINCIPAL = new NonTerminal("PRINCIPAL"),
+            METODO = new NonTerminal("METODO"),
+            PLANTILLA = new NonTerminal("PLANTILLA"),
+            FORMULARIO = new NonTerminal("FORMULARIO"),
+            LISTA_PARAMETROS = new NonTerminal("LISTA_PARAMETROS"),
+            SUPER = new NonTerminal("SUPER"),
+            LISTA_VAL_PARAMETROS = new NonTerminal("LISTA_VAL_PARAMETROS"),
+            SENTENCIAS = new NonTerminal("SENTENCIAS"),
+            SENT_PRINCIPAL = new NonTerminal("SENT_PRINCIPAL"),
+            TIPO_RETORNO = new NonTerminal("TIPO_RETORNO"),
+            TIPO_DATO = new NonTerminal("TIPO_DATO"),
+            EXPRESION = new NonTerminal("EXPRESION"),
+            ARITMETICA = new NonTerminal("ARITMETICA"),
+            RELACIONAL = new NonTerminal("RELACIONAL"),
+            LOGICA = new NonTerminal("LOGICA"),
+            OPERADOR = new NonTerminal("OPERADOR"),
+            FACTOR = new NonTerminal("FACTOR"),
+            LLAMADAS = new NonTerminal("LLAMADAS"),
+            MLLAMADAS = new NonTerminal("MLLAMADAS"),
+            NLLAMADAS = new NonTerminal("NLLAMADAS"),
+            LLAMADA = new NonTerminal("LLAMADA"),
+            ACC_DIMENSIONES = new NonTerminal("ACC_DIMENSIONES"),
+            NATIVA_CADENA = new NonTerminal("NATIVA_CADENA"),
+            NATIVA_BOOLEANA = new NonTerminal("NATIVA_BOOLEANA"),
+            NATIVA_NUMERICA = new NonTerminal("NATIVA_NUMERICA"),
+            NATIVA_FECHAHORA = new NonTerminal("NATIVA_FECHAHORA"),
+            NATIVA_MULTIMEDIA = new NonTerminal("NATIVA_MULTIMEDIA"),
+            VBOOLEANO = new NonTerminal("VBOOLEANO"),
+            PARAMETRO = new NonTerminal("PARAMETRO"),
+            DIMENSIONES = new NonTerminal("DIMENSIONES"),
+            ACC_DIMENSION = new NonTerminal("ACC_DIMENSION"),
+            ASIG_DIMENSIONES = new NonTerminal("ASIG_DIMENSIONES"),
+            ASIG_DIMENSION = new NonTerminal("ASIG_DIMENSION"),
+            ASIG_DIMENSION_U = new NonTerminal("ASIG_DIMENSION_U"),
+            ASIG_DIMENSION_M = new NonTerminal("ASIG_DIMENSION_M"),
+            DECLARACIONES = new NonTerminal("DECLARACIONES"),
+            ASIGNACION = new NonTerminal("ASIGNACION"),
+            SENTENCIA = new NonTerminal("SENTENCIA"),
+            IMPRIMIR = new NonTerminal("IMPRIMIR"),
+            REPETIR = new NonTerminal("REPETIR"),
+            RETORNO = new NonTerminal("RETORNO"),
+            SENT_SI = new NonTerminal("SENT_SI"),
+            PARA = new NonTerminal("PARA"),
+            MIENTRAS = new NonTerminal("MIENTRAS"),
+            CASOS = new NonTerminal("CASOS"),
+            VAR_CONTROL = new NonTerminal("VAR_CONTROL"),
+            SI = new NonTerminal("SI"),
+            VARIOS_SINO_SI = new NonTerminal("VARIOS_SINO_SI"),
+            SINO = new NonTerminal("SINO"),
+            SINO_SI = new NonTerminal("SINO_SI"),
+            CASOS_VALORES = new NonTerminal("CASOS_VALORES"),
+            CASO_DEFECTO = new NonTerminal("CASO_DEFECTO"),
+            CASO_VALOR = new NonTerminal("CASO_VALOR");
 
-        #region PRODUCCIONES
-        NonTerminal EXPRESION = new NonTerminal("EXPRESION");
-        NonTerminal LLAMADAS = new NonTerminal("LLAMADAS");
-        NonTerminal LLAMADA = new NonTerminal("LLAMADA");
-        NonTerminal VAL_PARAMETROS = new NonTerminal("VAL_PARAMETROS");
-        NonTerminal DIM_ARREGLOS = new NonTerminal("DIM_ARREGLOS");
-        NonTerminal DIM_ARREGLO = new NonTerminal("DIM_ARREGLO");
-        NonTerminal ACC_ARREGLOS = new NonTerminal("ACC_ARREGLOS");
-        NonTerminal ACC_ARREGLO = new NonTerminal("ACC_ARREGLO");
-        NonTerminal ASIG_ARREGLOS = new NonTerminal("ASIG_ARREGLOS");
-        NonTerminal ASIG_ARREGLO = new NonTerminal("ASIG_ARREGLO");
-        NonTerminal ASIG_ARREGLO_U = new NonTerminal("ASIG_ARREGLO_U");
-        NonTerminal ASIG_ARREGLO_M = new NonTerminal("ASIG_ARREGLO_M");
-        NonTerminal DECLARACION = new NonTerminal("DECLARACION");
-        NonTerminal ASIGNACION = new NonTerminal("ASIGNACION");
-        NonTerminal TIPO_DATO = new NonTerminal("TIPO_DATO");
-        NonTerminal VISIBILIDAD = new NonTerminal("VISIBILIDAD");
-        NonTerminal ASIG_ESTE = new NonTerminal("ASIG_ESTE");
-        NonTerminal SENT_SI = new NonTerminal("SENT_SI");
-        NonTerminal SI = new NonTerminal("SI");
-        NonTerminal VARIOS_SINO_SI = new NonTerminal("VARIOS_SINO_SI");
-        NonTerminal SINO = new NonTerminal("SINO");
-        NonTerminal SINO_SI = new NonTerminal("SINO_SI");
-        NonTerminal CASOS_VALORES = new NonTerminal("CASOS_VALORES");
-        NonTerminal CASO_VALOR = new NonTerminal("CASO_VALOR");
-        NonTerminal CASO_DEFECTO = new NonTerminal("CASO_DEFECTO");
-        NonTerminal SENT = new NonTerminal("SENT");
-        NonTerminal VAR_CONTROL = new NonTerminal("VAR_CONTROL");
-        NonTerminal SENTS = new NonTerminal("SENTS");
-        NonTerminal METODOS = new NonTerminal("METODOS");
-        NonTerminal METODO = new NonTerminal("METODO");
-        NonTerminal TIPO_RETORNO = new NonTerminal("TIPO_RETORNO");
-        NonTerminal PARAMETROS = new NonTerminal("PARAMETROS");
-        NonTerminal PARAMETRO = new NonTerminal("PARAMETRO");
-        NonTerminal LLAMADASUPER = new NonTerminal("LLAMADASUPER");
-        NonTerminal FUNCION = new NonTerminal("FUNCION");
-        NonTerminal FUNCIONES = new NonTerminal("FUNCIONES");
-        NonTerminal CLASE = new NonTerminal("CLASE");
-        NonTerminal HERENCIA = new NonTerminal("HERENCIA");
-        NonTerminal CLASES = new NonTerminal("CLASES");
-        NonTerminal IMPORTACIONES = new NonTerminal("IMPORTACIONES");
-        NonTerminal IMPORTACION = new NonTerminal("IMPORTACION");
-        NonTerminal INI = new NonTerminal("ARCHIVO_XFORM");
-        NonTerminal PLANTILLA = new NonTerminal("PLANTILLA");
+            
         #endregion
+        
         public Gramatica()
             : base(false)
         {
-            #region TOKENS
-            NonGrammarTerminals.Add(line);
-            NonGrammarTerminals.Add(multiline);
-            KeyTerm aumento = ToTerm("++");
-            KeyTerm decremento = ToTerm("--");
-            KeyTerm not = ToTerm("!");
-            KeyTerm por = ToTerm("*");
-            KeyTerm div = ToTerm("/");
-            KeyTerm mod = ToTerm("%");
-            KeyTerm mas = ToTerm("+");
-            KeyTerm menos = ToTerm("-");
-            KeyTerm menor = ToTerm("<");
-            KeyTerm menorigual = ToTerm("<=");
-            KeyTerm mayor = ToTerm(">");
-            KeyTerm mayorigual = ToTerm(">=");
-            KeyTerm diferente = ToTerm("!=");
-            KeyTerm igual = ToTerm("==");
-            KeyTerm and = ToTerm("&&");
-            KeyTerm or = ToTerm("||");
-            KeyTerm parizq = ToTerm("(");
-            KeyTerm parder = ToTerm(")");
-            KeyTerm punto = ToTerm(".");
-            KeyTerm dospuntos = ToTerm(":");
-            KeyTerm ptcoma = ToTerm(";");
-            KeyTerm tigual = ToTerm("=");
-            KeyTerm llaizq = ToTerm("{");
-            KeyTerm llader = ToTerm("}");
-            KeyTerm corizq = ToTerm("[");
-            KeyTerm corder = ToTerm("]");
-            KeyTerm coma = ToTerm(",");
-            KeyTerm intder = ToTerm("?");
-            #endregion
-            
-            #region PALABRAS RESERVADAS
-            MarkReservedWords(palabras_reservadas);
-            KeyTerm pr_importar = ToTerm("importar");
-            KeyTerm pr_cadena = ToTerm("cadena");
-            KeyTerm pr_booleano = ToTerm("booleano");
-            KeyTerm pr_entero = ToTerm("entero");
-            KeyTerm pr_decimal = ToTerm("decimal");
-            KeyTerm pr_fecha = ToTerm("fecha");
-            KeyTerm pr_hora = ToTerm("hora");
-            KeyTerm pr_fechahora = ToTerm("fechahora");
-            KeyTerm pr_respuestas = ToTerm("respuestas");
-            KeyTerm pr_si = ToTerm("si");
-            KeyTerm pr_sino = ToTerm("sino");
-            KeyTerm pr_vacio = ToTerm("vacio");
-            KeyTerm pr_caso = ToTerm("caso");
-            KeyTerm pr_de = ToTerm("de");
-            KeyTerm pr_valor = ToTerm("valor");
-            KeyTerm pr_default = ToTerm("default");
-            KeyTerm pr_para = ToTerm("para");
-            KeyTerm pr_repetir = ToTerm("repetir");
-            KeyTerm pr_hasta = ToTerm("hasta");
-            KeyTerm pr_hacer = ToTerm("hacer");
-            KeyTerm pr_mientras = ToTerm("mientras");
-            KeyTerm pr_imprimir = ToTerm("imprimir");
-            KeyTerm pr_continuar = ToTerm("continuar");
-            KeyTerm pr_romper = ToTerm("romper");
-            KeyTerm pr_retorno = ToTerm("retorno");
-            KeyTerm pr_publico = ToTerm("publico");
-            KeyTerm pr_privado = ToTerm("privado");
-            KeyTerm pr_protegido = ToTerm("protegido");
-            KeyTerm pr_nuevo = ToTerm("nuevo");
-            KeyTerm pr_nulo = ToTerm("nulo");
-            KeyTerm pr_este = ToTerm("este");
-            KeyTerm pr_super = ToTerm("super");
-            KeyTerm pr_principal = ToTerm("principal");
-            KeyTerm pr_clase = ToTerm("clase");
-            KeyTerm pr_padre = ToTerm("padre");
-            KeyTerm pr_formulario = ToTerm("formulario");
-            KeyTerm pr_pregunta = ToTerm("pregunta");
-            KeyTerm pr_grupo = ToTerm("grupo");
-            #endregion
             
             INI.Rule = IMPORTACIONES + CLASES;
 
-            #region IMPORTACIONES
-            /*#############################################################################*/
-            /*##############################  IMPORTACIONES ###############################*/
-            /*#############################################################################*/
+            /* IMPORTACIONES */
             IMPORTACIONES.Rule = MakeStarRule(IMPORTACIONES, IMPORTACION);
-            IMPORTACION.Rule = pr_importar + parizq + id + punto + id + parder + ptcoma;
-            IMPORTACION.ErrorRule = SyntaxError + ptcoma;
-            IMPORTACION.ErrorRule = SyntaxError + llader;
-            #endregion
+            IMPORTACION.Rule = pr_importar + parizq + id + punto + id + parder + tk_ptcoma;
 
-            #region CLASES METODOS Y FUNCIONES
-            /*#############################################################################*/
-            /*######################## CLASES METODOS Y FUNCIONES #########################*/
-            /*#############################################################################*/
+
+
+
+
+            /* CLASE */
             CLASES.Rule = MakeStarRule(CLASES, CLASE);
-
             CLASE.Rule = pr_clase + id + VISIBILIDAD + HERENCIA + llaizq + FUNCIONES + llader;
-            //CLASE.ErrorRule = SyntaxError + ptcoma;
-            CLASE.ErrorRule = SyntaxError + llader;
 
+
+
+
+
+
+            /* VISIBILIDAD */
+            VISIBILIDAD.Rule = pr_publico
+				            | pr_protegido
+				            | pr_privado
+				            | Empty
+				            ;
+
+
+
+
+
+
+            /* HERENCIA */
             HERENCIA.Rule = pr_padre + id
-                        | Empty;
+			            | Empty
+			            ;
 
+
+
+
+
+
+
+
+
+            /* FUNCIONES */
             FUNCIONES.Rule = MakeStarRule(FUNCIONES, FUNCION);
+            FUNCION.Rule = CONSTRUCTOR
+			            | PRINCIPAL
+			            | METODO
+			            | DECLARACIONES + tk_ptcoma
+			            | PLANTILLA
+			            ;
 
-            FUNCION.Rule = VISIBILIDAD + TIPO_RETORNO + id + parizq + PARAMETROS + parder + llaizq + SENTS + llader
-                        | pr_principal + parizq + parder + llaizq + SENTS + llader
-                        | id + parizq + PARAMETROS + parder + llaizq + LLAMADASUPER + SENTS + llader
-                        | DECLARACION + ptcoma
-                        | PLANTILLA
+
+
+
+            //por el momoento no tomar en cuenta la plantiila
+            PLANTILLA.Rule = FORMULARIO
+			            ;
+
+            FORMULARIO.Rule = pr_formulario + id + llaizq + FUNCIONES + llader;
+
+
+
+
+
+
+            /* CONSTRUCTOR */
+            CONSTRUCTOR.Rule = id + parizq + LISTA_PARAMETROS + parder + llaizq + SUPER +  SENTENCIAS + llader;
+            /* FUNCION SUPER DEL METODO CONSTRUCTOR */
+            SUPER.Rule = pr_super + parizq + LISTA_VAL_PARAMETROS + parder
+		            | Empty
+		            ;
+
+
+
+
+
+
+            /* METODO PRINCIPAL */
+            PRINCIPAL.Rule = pr_principal + parizq + LISTA_PARAMETROS + parder + llaizq + SENT_PRINCIPAL + llader;
+
+
+            SENT_PRINCIPAL.Rule = SENTENCIAS
+					            | pr_nuevo + id + parizq + parder + tk_punto + id + tk_ptcoma
+					            ;
+
+
+
+            /* METODO */
+            METODO.Rule = VISIBILIDAD + TIPO_RETORNO + id + parizq + LISTA_PARAMETROS + parder + llaizq + SENTENCIAS + llader
+
+
+
+
+
+
+
+            /* TIPO_RETORNO */
+            TIPO_RETORNO.Rule = TIPO_DATO
+				            | pr_vacio
+				            ;
+
+            /* TIPO_DATO */
+            TIPO_DATO.Rule = pr_cadena
+                        | pr_booleano
+                        | pr_entero
+                        | pr_decimal
+                        | pr_fecha
+                        | pr_hora
+                        | pr_fechahora
+                        | pr_respuestas
+                        | id
                         ;
-            FUNCION.ErrorRule = SyntaxError + ptcoma;
-            FUNCION.ErrorRule = SyntaxError + llader;
 
-            PLANTILLA.Rule = pr_formulario + id + parizq + PARAMETROS + parder + llaizq + SENTS + llader
-                           | pr_pregunta + id + parizq + PARAMETROS + parder + llaizq + SENTS + llader
-                           | pr_grupo + id + parizq + PARAMETROS + parder + llaizq + SENTS + llader
-                           ;
 
-            LLAMADASUPER.Rule = pr_super + parizq + VAL_PARAMETROS + parder + ptcoma
-                            | Empty;
-            #endregion
 
-            #region SENTENCIAS
-            /*#############################################################################*/
-            /*###############################   SENTENCIAS  ###############################*/
-            /*#############################################################################*/
-            SENTS.Rule = MakeStarRule(SENTS, SENT);
 
-            SENT.Rule = pr_imprimir + parizq + EXPRESION + parder + ptcoma
-                    | pr_repetir + llaizq + SENTS + llader + pr_hasta + parizq + EXPRESION + parder + ptcoma
-                    | pr_hacer + llaizq + SENTS + llader + pr_mientras + parizq + EXPRESION + parder + ptcoma
-                    | pr_para + parizq + VAR_CONTROL + ptcoma + EXPRESION + ptcoma + EXPRESION + parder + llaizq + SENTS + llader
-                    | pr_mientras + parizq + EXPRESION + parder + llaizq + SENTS + llader
-                    | pr_caso + parizq + EXPRESION + parder + pr_de + llaizq + CASOS_VALORES + CASO_DEFECTO + llader
-                    | pr_retorno + ptcoma
-                    | pr_retorno + EXPRESION + ptcoma
+
+
+
+            /* EXPRESIONES */
+            EXPRESION.Rule = ARITMETICA
+			            | RELACIONAL
+			            | LOGICA
+			            | OPERADOR
+			            | FACTOR
+			            | LLAMADAS
+			            | parizq + EXPRESION + parder
+			            ;
+
+            ARITMETICA.Rule = EXPRESION + tk_mas + EXPRESION
+			            |	EXPRESION + tk_menos + EXPRESION
+			            |	EXPRESION + tk_por + EXPRESION
+			            |	EXPRESION + tk_div + EXPRESION
+			            |	EXPRESION + tk_pot + EXPRESION
+			            |	EXPRESION + tk_mod + EXPRESION
+			            |	tk_menos + EXPRESION
+			            |	tk_mas + EXPRESION
+			            ;
+
+            RELACIONAL.Rule = EXPRESION + tk_mayor + EXPRESION
+			            |	EXPRESION + tk_menor + EXPRESION
+			            |	EXPRESION + tk_mayigual + EXPRESION
+			            |	EXPRESION + tk_menigual + EXPRESION
+			            |	EXPRESION + tk_diferent + EXPRESION
+			            |	EXPRESION + tk_igualr + EXPRESION
+			            ;
+
+            LOGICA.Rule = EXPRESION + tk_and + EXPRESION
+			            | EXPRESION + tk_or + EXPRESION
+			            | tk_not + EXPRESION
+			            ;
+
+            OPERADOR.Rule = tk_dmas + EXPRESION
+			            |	tk_dmenos + EXPRESION
+			            |	EXPRESION + tk_dmas
+			            |	EXPRESION + tk_dmenos
+			            ;
+
+            FACTOR.Rule = cadena
+			            | entero
+			            | ddecimal
+			            | VBOOLEANO
+			            | fecha
+			            | hora
+			            | fechahora
+			            | id
+			            ;
+
+
+
+
+
+            /* LLAMADAS A FUNCIONES */
+            LLAMADAS.Rule = MLLAMADAS
+			            |  NLLAMADAS; // llamdas de funciones nativas
+
+            MLLAMADAS.Rule = MakePlusRule(MLLAMADAS, tk_punto, LLAMADA);
+
+            LLAMADA.Rule = id + parizq + LISTA_VAL_PARAMETROS + parder //llamada a una clase
+			            | id + ACC_DIMENSIONES 				//llamada a un arreglo
+			            | id								//llamada a un atributo o declaracion
+			            | pr_este 							//llamada a su propia clase
+			            ;
+
+            NLLAMADAS.Rule = NATIVA_CADENA
+			            | NATIVA_BOOLEANA
+			            | NATIVA_NUMERICA
+			            | NATIVA_FECHAHORA
+			            | NATIVA_MULTIMEDIA
+			            ;
+
+            NATIVA_CADENA.Rule = pr_cadena + parizq + EXPRESION + parder 	// fun nat cadena
+			            | pr_subcad + parizq + cadena + tk_coma + EXPRESION + tk_coma + EXPRESION + parder
+			            | pr_poscad + parizq + cadena + tk_coma + EXPRESION + parder
+			            ;
+
+            NATIVA_BOOLEANA.Rule = pr_booleano + parizq + EXPRESION + parder;
+
+            NATIVA_NUMERICA.Rule = pr_entero + parizq + LISTA_VAL_PARAMETROS + parder // ARGUMENTOS LISTA VALORES PARAMETROS
+				            | pr_tam + parizq + EXPRESION + parder
+				            | pr_random + parizq + LISTA_VAL_PARAMETROS + parder
+				            | pr_min + parizq + LISTA_VAL_PARAMETROS + parder
+				            | pr_max + parizq + LISTA_VAL_PARAMETROS + parder
+				            | pr_pow + parizq + EXPRESION + tk_coma + entero + parder
+				            | pr_log + parizq + EXPRESION + parder
+				            | pr_log10 + parizq + EXPRESION + parder
+				            | pr_abs + parizq + EXPRESION + parder
+				            | pr_sin + parizq + EXPRESION + parder
+				            | pr_cos + parizq + EXPRESION + parder
+				            | pr_tan + parizq + EXPRESION + parder
+				            | pr_sqrt + parizq + EXPRESION + parder
+				            | pr_pi + parizq + parder
+				            ;
+
+            NATIVA_FECHAHORA.Rule = pr_hoy + parizq + parder
+					            | pr_ahora + parizq + parder
+					            | pr_fecha + parizq + cadena + parder
+					            | pr_hora + parizq + cadena + parder
+					            | pr_fechahora + parizq + cadena + parder
+					            ;
+
+            NATIVA_MULTIMEDIA.Rule = pr_imagen + parizq + EXPRESION + tk_coma + VBOOLEANO
+					            | pr_video + parizq + EXPRESION + tk_coma + VBOOLEANO
+					            | pr_audio + parizq + EXPRESION + tk_coma + VBOOLEANO
+					            ;
+
+            VBOOLEANO.Rule = pr_verdadero
+			            |	pr_falso
+			            ;
+
+
+
+
+
+
+            /* LISTA DE PARAMETROS ( PARAMETRO )*/
+            LISTA_PARAMETROS.Rule = MakeStarRule(LISTA_PARAMETROS, tk_coma, PARAMETRO);
+            LISTA_VAL_PARAMETROS.Rule = MakeStarRule(LISTA_VAL_PARAMETROS, tk_coma, EXPRESION);
+            PARAMETRO.Rule = TIPO + DIMENSIONES + id;
+
+
+
+
+
+
+
+            /* DIMENSIONES */
+            DIMENSIONES.Rule = MakeStarRule(DIMENSIONES, DIMENSION);
+            DIMENSION.Rule = corizq + corder;
+
+            ACC_DIMENSIONES.Rule = MakePlusRule(ACC_DIMENSIONES, ACC_DIMENSION);
+
+            ACC_DIMENSION.Rule = corizq + EXPRESION + corder;
+
+            ASIG_DIMENSIONES.Rule = llaizq + ASIG_DIMENSION + llader;
+
+            ASIG_DIMENSION.Rule = ASIG_DIMENSION_U
+                           | ASIG_DIMENSION_M;
+
+            ASIG_DIMENSION_U.Rule = MakeStarRule(ASIG_DIMENSION_U, tk_coma, EXPRESION);
+
+            ASIG_DIMENSION_M.Rule = MakeStarRule(ASIG_DIMENSION_M, tk_coma, ASIG_DIMENSIONES);
+
+
+
+
+
+
+
+            /* DECLARACIONES */
+            DECLARACIONES.Rule = TIPO_DATO + VISIBILIDAD + id + tk_igual + pr_nuevo + TIPO_DATO + parizq + LISTA_PARAMETROS + parder
+                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tigual + pr_nuevo + TIPO_DATO + ACC_DIMENSIONES
+                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tigual + ASIG_DIMENSIONES
+                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tigual + EXPRESION
+                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tigual + pr_nulo
+                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES
+                            | TIPO_DATO + VISIBILIDAD + id + tigual + pr_nulo
+                            | TIPO_DATO + VISIBILIDAD + id + tigual + EXPRESION
+                            | TIPO_DATO + VISIBILIDAD + id
+				            ;
+
+
+
+
+
+            /* ASIGNACIONES */
+            ASIGNACION.Rule = LLAMADAS + tk_igual + EXPRESION;
+
+
+
+
+
+
+
+
+            /* SENTENCIAS */
+            SENTENCIAS.Rule = MakeStarRule(SENTENCIAS, SENTENCIA);
+
+            SENTENCIA.Rule = IMPRIMIR + ptcoma
+                    | REPETIR + ptcoma
+                    | HACER + ptcoma
+                    | RETORNO + ptcoma
                     | pr_continuar + ptcoma
                     | pr_romper + ptcoma
                     | LLAMADAS + ptcoma
-                    | SENT_SI
                     | ASIGNACION + ptcoma
-                    | DECLARACION + ptcoma
+                    | DECLARACIONES + ptcoma
+                    | SENT_SI
+                    | PARA
+                    | MIENTRAS
+                    | CASOS
                     ;
-            SENT.ErrorRule = SyntaxError + ptcoma;
-            SENT.ErrorRule = SyntaxError + llader;
+
+
+
+
+
+            /* IMPRIMIR */
+            IMPRIMIR.Rule = pr_imprimir + parizq + EXPRESION + parder;
+
+
+
+            /* REPETIR */
+            REPETIR.Rule = pr_repetir + llaizq + SENTENCIAS + llader + pr_hasta + parizq + EXPRESION + parder;
+
+
+
+            /* HACER */
+            HACER.Rule = pr_hacer + llaizq + SENTENCIAS + llader + pr_mientras + parizq + EXPRESION + parder;
+
+
+
+            /* PARA */
+            PARA.Rule = pr_para + parizq + VAR_CONTROL + tk_ptcoma + EXPRESION + tk_ptcoma + EXPRESION + parder + llaizq + SENTENCIAS + llader;
 
             VAR_CONTROL.Rule = ASIGNACION
-                    | DECLARACION
-                    ;
+			            | DECLARACIONES
+                        ;
 
-            #region CASOS
-            /*#############################################################################*/
-            /*###############################     CASOS     ###############################*/
-            /*#############################################################################*/
-            CASOS_VALORES.Rule = MakePlusRule(CASOS_VALORES, CASO_VALOR);
 
-            CASO_VALOR.Rule = pr_valor + EXPRESION + dospuntos + llaizq + SENTS + llader;
 
-            CASO_DEFECTO.Rule = pr_default + dospuntos + llaizq + SENTS + llader
-                            | Empty;
-            #endregion
+            /* MIENTRAS */
+            MIENTRAS.Rule = pr_mientras + parizq + EXPRESION + parder + llaizq + SENTENCIAS + llader;
 
-            #region SENT SI
-            /*#############################################################################*/
-            /*############################### SENTENCIA SI  ###############################*/
-            /*#############################################################################*/
+
+
+            /* SENTENCIA SI */
             SENT_SI.Rule = SI
-                | SI + VARIOS_SINO_SI + SINO
-                | SI + VARIOS_SINO_SI
-                | SI + SINO
-                ;
+                        | SI + VARIOS_SINO_SI + SINO
+                        | SI + VARIOS_SINO_SI
+                        | SI + SINO
+                        ;
 
-            SI.Rule = pr_si + parizq + EXPRESION + parder + llaizq + SENTS + llader;
+            SI.Rule = pr_si + parizq + EXPRESION + parder + llaizq + SENTENCIAS + llader;
 
             SINO_SI.Rule = pr_sino + SI;
 
-            SINO.Rule = pr_sino + llaizq + SENTS + llader;
+            SINO.Rule = pr_sino + llaizq + SENTENCIAS + llader;
 
             VARIOS_SINO_SI.Rule = MakePlusRule(VARIOS_SINO_SI, SINO_SI);
-            #endregion
 
-            #region ASIGNACIONES
-            /*#############################################################################*/
-            /*############################### ASIGNACIONES  ###############################*/
-            /*#############################################################################*/
-            ASIGNACION.Rule = id + ACC_ARREGLOS + tigual + EXPRESION
-                        | ASIG_ESTE + ACC_ARREGLOS + tigual + EXPRESION
-                        | id + tigual + EXPRESION
-                        | ASIG_ESTE + tigual + EXPRESION;
 
-            ASIG_ESTE.Rule = pr_este + punto + id
-                        | Empty;
-            #endregion
 
-            #region DECLARACIONES
-            /*#############################################################################*/
-            /*############################### DECLARACIONES ###############################*/
-            /*#############################################################################*/
-            DECLARACION.Rule = TIPO_DATO + VISIBILIDAD + id + DIM_ARREGLOS + tigual + pr_nuevo + TIPO_DATO + ACC_ARREGLOS
-                        | TIPO_DATO + VISIBILIDAD + id + DIM_ARREGLOS + tigual + ASIG_ARREGLOS
-                        | TIPO_DATO + VISIBILIDAD + id + DIM_ARREGLOS + tigual + EXPRESION
-                        | TIPO_DATO + VISIBILIDAD + id + DIM_ARREGLOS + tigual + pr_nulo
-                        | TIPO_DATO + VISIBILIDAD + id + DIM_ARREGLOS
-                        | TIPO_DATO + VISIBILIDAD + id + tigual + pr_nuevo + TIPO_DATO + parizq + VAL_PARAMETROS + parder
-                        | TIPO_DATO + VISIBILIDAD + id + tigual + EXPRESION
-                        | TIPO_DATO + VISIBILIDAD + id + tigual + pr_nulo
-                        | TIPO_DATO + VISIBILIDAD + id
-                        ;
-            #endregion
-            #endregion
 
-            #region AREA DE ARREGLOS
-            /*#############################################################################*/
-            /*EJEMPLO... DIM_ARREGLOS -> [ ]... ACCESO_ARREGLOS -> [ ID , 98 ]... ASIG_ARREGLOS -> { 32, 32 }  { { 23,23 },{ 23,21 } } */
-            /*#############################################################################*/
-            DIM_ARREGLOS.Rule = MakePlusRule(DIM_ARREGLOS, DIM_ARREGLO);
+            /* CASOS */
+            CASOS.Rule = pr_caso + parizq + EXPRESION + parder + pr_de + llaizq + CASOS_VALORES + CASO_DEFECTO + llader;
 
-            DIM_ARREGLO.Rule = corizq + corder;
+            CASOS_VALORES.Rule = MakePlusRule(CASOS_VALORES, CASO_VALOR);
 
-            ACC_ARREGLOS.Rule = MakePlusRule(ACC_ARREGLOS, ACC_ARREGLO);
+            CASO_VALOR.Rule = pr_valor + EXPRESION + dospuntos + llaizq + SENTENCIAS + llader;
 
-            ACC_ARREGLO.Rule = corizq + EXPRESION + corder;
+            CASO_DEFECTO.Rule = pr_default + dospuntos + llaizq + SENTENCIAS + llader
+				            | Empty;
 
-            ASIG_ARREGLOS.Rule = llaizq + ASIG_ARREGLO + llader;
 
-            ASIG_ARREGLO.Rule = ASIG_ARREGLO_U
-                                | ASIG_ARREGLO_M;
 
-            ASIG_ARREGLO_U.Rule = MakeStarRule(ASIG_ARREGLO_U, coma, EXPRESION);
-
-            ASIG_ARREGLO_M.Rule = MakeStarRule(ASIG_ARREGLO_M, coma, ASIG_ARREGLOS);
-            #endregion
-
-            #region EXPRESIONES
-            /*#############################################################################*/
-            /*################################ EXPRESIONES ################################*/
-            /*#############################################################################*/
-            EXPRESION.Rule = EXPRESION + or + EXPRESION
-                        | EXPRESION + and + EXPRESION
-                        | EXPRESION + igual + EXPRESION
-                        | EXPRESION + diferente + EXPRESION
-                        | EXPRESION + menor + EXPRESION
-                        | EXPRESION + menorigual + EXPRESION
-                        | EXPRESION + mayor + EXPRESION
-                        | EXPRESION + mayorigual + EXPRESION
-                        | EXPRESION + mas + EXPRESION
-                        | EXPRESION + menos + EXPRESION
-                        | EXPRESION + por + EXPRESION
-                        | EXPRESION + div + EXPRESION
-                        | EXPRESION + mod + EXPRESION
-                        | aumento + EXPRESION
-                        | decremento + EXPRESION
-                        | EXPRESION + aumento
-                        | EXPRESION + decremento
-                        | not + EXPRESION
-                        | mas + EXPRESION
-                        | menos + EXPRESION
-                        | parizq + EXPRESION + parder
-                        | entero
-                        | cadena
-                        | hora
-                        | fecha
-                        | fechahora
-                        | edecimal
-                        | boolean
-                        | LLAMADAS
-                        ; 
-            #endregion
-
-            #region LLAMADAS
-            /*#############################################################################*/
-            /*############## LLAMADAS A FUNCIONES PROCEDIMIENTOS Y ARREGLOS ###############*/
-            /*#############################################################################*/
-            LLAMADAS.Rule = MakePlusRule(LLAMADAS, punto, LLAMADA);
-
-            LLAMADA.Rule = id + parizq + VAL_PARAMETROS + parder
-                        | id + ACC_ARREGLOS
-                        | id
-                        | pr_este
-                        ;
-            #endregion
-
-            #region AREA DE PARAMETROS
-            /*#############################################################################*/
-            /*############## PARAMETROS DE METODOS Y VALORES DE PARAMETROS ################*/
-            /*#############################################################################*/
-            VAL_PARAMETROS.Rule = MakeStarRule(VAL_PARAMETROS, coma, EXPRESION);
-
-            PARAMETROS.Rule = MakeStarRule(PARAMETROS, coma, PARAMETRO);
-
-            PARAMETRO.Rule = TIPO_DATO + id + DIM_ARREGLOS
-                        | TIPO_DATO + id;
-            #endregion
-
-            #region TIPO DE DATOS Y RETORNOS
-            /*#############################################################################*/
-            /*################## TIPO DE DATOS Y TIPO DE OBJETSO CON ID ###################*/
-            /*#############################################################################*/
-            TIPO_DATO.Rule = pr_cadena
-                    | pr_booleano
-                    | pr_entero
-                    | pr_decimal
-                    | pr_fecha
-                    | pr_hora
-                    | pr_fechahora
-                    | id
+            /* RETORNO */
+            RETORNO.Rule = pr_retorno
+                    | pr_retorno + EXPRESION
                     ;
-
-            TIPO_RETORNO.Rule = TIPO_DATO
-                            | pr_vacio
-                            ;
-            #endregion
-
-            #region VISIBILIDAD
-            /*#############################################################################*/
-            /*################################ VISIBILIDAD ################################*/
-            /*#############################################################################*/
-            VISIBILIDAD.Rule = pr_publico
-                            | pr_privado
-                            | pr_protegido
-                            | Empty
-                            ;
-            #endregion
-
-            #region PRECEDENCIA Y ASOCIATIVAD
-            /*#############################################################################*/
-            /*######################## PRECEDENCIA Y ASOCIATIVIDAD ########################*/
-            /*#############################################################################*/
-            RegisterOperators(8, Associativity.Right, "!", "^");
-            RegisterOperators(7, Associativity.Left, "*", "/", "%");
-            RegisterOperators(6, Associativity.Left, "+", "-");
-            RegisterOperators(5, Associativity.Left, "<", "<=", ">", ">=");
-            RegisterOperators(4, Associativity.Left, "==", "!=");
-            RegisterOperators(3, Associativity.Left, "&&");
-            RegisterOperators(2, Associativity.Left, "||");
-            #endregion
-
-            this.Root = INI;
         }
     }
 }
