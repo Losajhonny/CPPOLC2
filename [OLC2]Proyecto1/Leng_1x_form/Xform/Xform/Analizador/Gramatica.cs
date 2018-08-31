@@ -236,26 +236,29 @@ namespace Xform.Analizador
             #endregion
 
 
+            /**
+             * No Terminal INI : inicio de la gramatica
+             * */
             INI.Rule = IMPORTACIONES + CLASES;
 
-            /* IMPORTACIONES */
+
+            /**
+             * Importaciones
+             * */
             IMPORTACIONES.Rule = MakeStarRule(IMPORTACIONES, IMPORTACION);
             IMPORTACION.Rule = pr_importar + parizq + id + tk_punto + id + parder + tk_ptcoma;
 
 
-
-
-
-            /* CLASE */
+            /**
+             * Clases
+             * */
             CLASES.Rule = MakeStarRule(CLASES, CLASE);
             CLASE.Rule = pr_clase + id + VISIBILIDAD + HERENCIA + llaizq + FUNCIONES + llader;
 
 
-
-
-
-
-            /* VISIBILIDAD */
+            /**
+             * Visibilidad
+             * */
             VISIBILIDAD.Rule = pr_publico
 				            | pr_protegido
 				            | pr_privado
@@ -263,24 +266,17 @@ namespace Xform.Analizador
 				            ;
 
 
-
-
-
-
-            /* HERENCIA */
+            /**
+             * Herencia
+             * */
             HERENCIA.Rule = pr_padre + id
 			            | Empty
 			            ;
 
 
-
-
-
-
-
-
-
-            /* FUNCIONES */
+            /**
+             * Funciones
+             * */
             FUNCIONES.Rule = MakeStarRule(FUNCIONES, FUNCION);
             FUNCION.Rule = CONSTRUCTOR
 			            | PRINCIPAL
@@ -290,56 +286,50 @@ namespace Xform.Analizador
 			            ;
 
 
-
-
+            /**
+             * Plantilla
+             * */
             //por el momoento no tomar en cuenta la plantiila
             PLANTILLA.Rule = FORMULARIO
 			            ;
-
             FORMULARIO.Rule = pr_formulario + id + llaizq + FUNCIONES + llader;
 
 
-
-
-
-
-            /* CONSTRUCTOR */
+            /**
+             * Constructor
+             * */
             CONSTRUCTOR.Rule = id + parizq + LISTA_PARAMETROS + parder + llaizq + SUPER +  SENTENCIAS + llader;
-            /* FUNCION SUPER DEL METODO CONSTRUCTOR */
             SUPER.Rule = pr_super + parizq + LISTA_VAL_PARAMETROS + parder + tk_ptcoma
 		            | Empty
 		            ;
 
 
-
-
-
-
-            /* METODO PRINCIPAL */
+            /**
+             * Metodo Principal
+             * */
             PRINCIPAL.Rule = pr_principal + parizq + LISTA_PARAMETROS + parder + llaizq + SENT_PRINCIPAL + llader;
-
-
             SENT_PRINCIPAL.Rule = SENTENCIAS
 					            | pr_nuevo + id + parizq + parder + tk_punto + id + tk_ptcoma
 					            ;
 
 
-
-            /* METODO */
+            /**
+             * Metodo
+             * */
             METODO.Rule = VISIBILIDAD + TIPO_RETORNO + id + parizq + LISTA_PARAMETROS + parder + llaizq + SENTENCIAS + llader;
 
 
-
-
-
-
-
-            /* TIPO_RETORNO */
+            /**
+             * Tipo Retorno
+             * */
             TIPO_RETORNO.Rule = TIPO_DATO
 				            | pr_vacio
 				            ;
 
-            /* TIPO_DATO */
+
+            /**
+             * Tipo dato
+             * */
             TIPO_DATO.Rule = pr_cadena
                         | pr_booleano
                         | pr_entero
@@ -351,13 +341,10 @@ namespace Xform.Analizador
                         | id
                         ;
 
-
-
-
-
-
-
-            /* EXPRESIONES */
+            
+            /**
+             * Expresiones
+             * */
             EXPRESION.Rule = ARITMETICA
 			            | RELACIONAL
 			            | LOGICA
@@ -407,10 +394,9 @@ namespace Xform.Analizador
 			            ;
 
 
-
-
-
-            /* LLAMADAS A FUNCIONES */
+            /**
+             * LLamadas a funciones, id, clases, etc
+             * */
             LLAMADAS.Rule = MLLAMADAS
 			            |  NLLAMADAS; // llamdas de funciones nativas
 
@@ -467,24 +453,19 @@ namespace Xform.Analizador
             VBOOLEANO.Rule = pr_verdadero
 			            |	pr_falso
 			            ;
+            
 
-
-
-
-
-
-            /* LISTA DE PARAMETROS ( PARAMETRO )*/
+            /**
+             * Parametros
+             * */
             LISTA_PARAMETROS.Rule = MakeStarRule(LISTA_PARAMETROS, tk_coma, PARAMETRO);
             LISTA_VAL_PARAMETROS.Rule = MakeStarRule(LISTA_VAL_PARAMETROS, tk_coma, EXPRESION);
             PARAMETRO.Rule = TIPO_DATO + DIMENSIONES + id;
 
 
-
-
-
-
-
-            /* DIMENSIONES */
+            /**
+             * Dimensiones
+             * */
             DIMENSIONES.Rule = MakeStarRule(DIMENSIONES, DIMENSION);
             DIMENSION.Rule = corizq + corder;
 
@@ -502,12 +483,9 @@ namespace Xform.Analizador
             ASIG_DIMENSION_M.Rule = MakeStarRule(ASIG_DIMENSION_M, tk_coma, ASIG_DIMENSIONES);
 
 
-
-
-
-
-
-            /* DECLARACIONES */
+            /**
+             * Declaraciones
+             * */
             DECLARACIONES.Rule = TIPO_DATO + VISIBILIDAD + id + tk_igual + pr_nuevo + TIPO_DATO + parizq + LISTA_PARAMETROS + parder
                             | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tk_igual + pr_nuevo + TIPO_DATO + ACC_DIMENSIONES
                             | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tk_igual + ASIG_DIMENSIONES
@@ -520,20 +498,15 @@ namespace Xform.Analizador
 				            ;
 
 
-
-
-
-            /* ASIGNACIONES */
+            /**
+             * Asignaciones
+             * */
             ASIGNACION.Rule = LLAMADAS + tk_igual + EXPRESION;
 
 
-
-
-
-
-
-
-            /* SENTENCIAS */
+            /**
+             * Sentencias
+             * */
             SENTENCIAS.Rule = MakeStarRule(SENTENCIAS, SENTENCIA);
 
             SENTENCIA.Rule = IMPRIMIR + tk_ptcoma
@@ -552,39 +525,43 @@ namespace Xform.Analizador
                     ;
 
 
-
-
-
-            /* IMPRIMIR */
+            /**
+             * Imprimir
+             * */
             IMPRIMIR.Rule = pr_imprimir + parizq + EXPRESION + parder;
 
 
-
-            /* REPETIR */
+            /**
+             * Repetir
+             * */
             REPETIR.Rule = pr_repetir + llaizq + SENTENCIAS + llader + pr_hasta + parizq + EXPRESION + parder;
 
 
-
-            /* HACER */
+            /**
+             * Hacer
+             * */
             HACER.Rule = pr_hacer + llaizq + SENTENCIAS + llader + pr_mientras + parizq + EXPRESION + parder;
 
-
-
-            /* PARA */
+            
+            /**
+             * Para
+             * */
             PARA.Rule = pr_para + parizq + VAR_CONTROL + tk_ptcoma + EXPRESION + tk_ptcoma + EXPRESION + parder + llaizq + SENTENCIAS + llader;
 
             VAR_CONTROL.Rule = ASIGNACION
 			            | DECLARACIONES
                         ;
 
-
-
-            /* MIENTRAS */
+            
+            /**
+             * Mientras
+             * */
             MIENTRAS.Rule = pr_mientras + parizq + EXPRESION + parder + llaizq + SENTENCIAS + llader;
+            
 
-
-
-            /* SENTENCIA SI */
+            /**
+             * Sentencias si
+             * */
             SENT_SI.Rule = SI
                         | SI + VARIOS_SINO_SI + SINO
                         | SI + VARIOS_SINO_SI
@@ -599,10 +576,10 @@ namespace Xform.Analizador
 
             VARIOS_SINO_SI.Rule = MakePlusRule(VARIOS_SINO_SI, SINO_SI);
 
-
-
-
-            /* CASOS */
+            
+            /**
+             * Casos
+             * */
             CASOS.Rule = pr_caso + parizq + EXPRESION + parder + pr_de + llaizq + CASOS_VALORES + CASO_DEFECTO + llader;
 
             CASOS_VALORES.Rule = MakePlusRule(CASOS_VALORES, CASO_VALOR);
@@ -612,9 +589,9 @@ namespace Xform.Analizador
             CASO_DEFECTO.Rule = pr_default + tk_dospuntos + llaizq + SENTENCIAS + llader
 				            | Empty;
 
-
-
-            /* RETORNO */
+            /**
+             * Retornos
+             * */
             RETORNO.Rule = pr_retorno
                     | pr_retorno + EXPRESION
                     ;
