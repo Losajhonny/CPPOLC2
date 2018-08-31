@@ -7,13 +7,20 @@ using System.Threading.Tasks;
 
 namespace Xform.Analizador
 {
-    /// <summary>
-    /// universidad:    @ USAC
-    /// autor :         @ Jhonatan Lopez
-    /// carnet:         @ 201325583
-    /// </summary>
+    /**
+     * @clase Gramatica
+     * @autor        : Jhonatan Lopez
+     * @carnet       : 201325583
+     * @universidad  : USAC
+     * @facultad     : ingenieria
+     * */
+
     class Gramatica : Grammar
     {
+        /**
+         * Se define todas las palabras reservadas
+         * Listado de palabras reservadas que tendra el lenguaje
+         * */
         public static string[] palabras_reservadas = { "importar", "clase", "publico", "privado", "protegido",
                                                     "padre", "formulario", "super", "principal", "nuevo",
                                                     "vacio", "cadena", "booleano", "entero", "decimal",
@@ -27,6 +34,11 @@ namespace Xform.Analizador
                                                     "sino", "caso", "valor", "default", "retorno",
                                                     "continuar", "romper", "de" };
         
+        /**
+         * Definicion de no terminales del lenguaje
+         * se utilizan para hacer las producciones de
+         * la gramatica
+         * */
         #region NO TERMINALES
         NonTerminal INI = new NonTerminal("INI"),
             IMPORTACIONES = new NonTerminal("IMPORTACIONES"),
@@ -100,11 +112,33 @@ namespace Xform.Analizador
         public Gramatica()
             : base(false)
         {
+            /**
+             * Expresiones regulares que definen los datos de entrada
+             * de un tipo de dato ejemplo: id, cadena, entero, decimal, etc.
+             * */
             #region EXPRESIONES REGULARES
+            CommentTerminal line = new CommentTerminal("LINE", "$$", "\n", "\r\n");
+            CommentTerminal multiline = new CommentTerminal("MULTI_LINE", "$#", "#$");
+            NumberLiteral entero = new NumberLiteral("ENTERO");
+            StringLiteral cadena = new StringLiteral("CADENA", "\"", StringOptions.AllowsAllEscapes);
+            IdentifierTerminal id = new IdentifierTerminal("ID");
+
+            RegexBasedTerminal ddecimal = new RegexBasedTerminal("DECIMAL", @"[0-9]+[\.][0-9]+");
+            RegexBasedTerminal hora = new RegexBasedTerminal("HORA", "([\"][0-9][0-9][:][0-9][0-9][:][0-9][0-9][\"]|[\'][0-9][0-9][:][0-9][0-9][:][0-9][0-9][\'])");
+            RegexBasedTerminal fecha = new RegexBasedTerminal("FECHA", "([\"][0-9][0-9][/][0-9][0-9][/][0-9][0-9][0-9][0-9][\"]|[\'][0-9][0-9][/][0-9][0-9][/][0-9][0-9][0-9][0-9][\'])");
+            RegexBasedTerminal fechahora = new RegexBasedTerminal("FECHAHORA", "([\"][0-9][0-9][/][0-9][0-9][/][0-9][0-9][0-9][0-9][ ][0-9][0-9][:][0-9][0-9][:][0-9][0-9][\"]|[\'][0-9][0-9][/][0-9][0-9][/][0-9][0-9][0-9][0-9][ ][0-9][0-9][:][0-9][0-9][:][0-9][0-9][\'])");
 	        #endregion
 
+            /**
+             * Agregando los comentarios
+             * */
+            NonGrammarTerminals.Add(line);
+            NonGrammarTerminals.Add(multiline);
+
+            /**
+             * Palabras reservadas y Operadores y Simbolos
+             * */
             #region TERMINALES
-            /* PALABRAS RESERVADAS */
             KeyTerm pr_importar = ToTerm("importar"),
                 pr_clase = ToTerm("clase"),
                 pr_publico = ToTerm("publico"),
@@ -160,23 +194,47 @@ namespace Xform.Analizador
                 pr_cos = ToTerm("cos"),
                 pr_tan = ToTerm("tan"),
                 pr_sqrt = ToTerm("sqrt"),
-                pr_pi = ToTerm("pi")
-                ;
+                pr_pi = ToTerm("pi"),
+                pr_nulo = ToTerm("nulo"),
+                pr_de = ToTerm("de");
 
+            /**
+             * LLamar al metodo MarkReservedWords con el vector de
+             * palabras reservadas para darle mas prioridad que los
+             * identificadores
+             * */
+            MarkReservedWords(palabras_reservadas);
 
-
-            /* TOKENS */
-            KeyTerm parizq = ToTerm("("),
+            Terminal parizq = ToTerm("("),
                 parder = ToTerm(")"),
-                tk_ptcoma = ToTerm(";"),
                 llaizq = ToTerm("{"),
                 llader = ToTerm("}"),
+                corizq = ToTerm("["),
+                corder = ToTerm("]"),
                 tk_punto = ToTerm("."),
+                tk_coma = ToTerm(","),
                 tk_mas = ToTerm("+"),
                 tk_menos = ToTerm("-"),
                 tk_por = ToTerm("*"),
-                tk_div = ToTerm("/");
+                tk_div = ToTerm("/"),
+                tk_pot = ToTerm("^"),
+                tk_mod = ToTerm("%"),
+                tk_ptcoma = ToTerm(";"),
+                tk_mayor = ToTerm(">"),
+                tk_menor = ToTerm("<"),
+                tk_mayigual = ToTerm(">="),
+                tk_menigual = ToTerm("<="),
+                tk_diferent = ToTerm("!="),
+                tk_igualr = ToTerm("=="),
+                tk_and = ToTerm("&&"),
+                tk_or = ToTerm("||"),
+                tk_not = ToTerm("!"),
+                tk_igual = ToTerm("="),
+                tk_dospuntos = ToTerm(":"),
+                tk_dmas = ToTerm("++"),
+                tk_dmenos = ToTerm("--");
             #endregion
+
 
             INI.Rule = IMPORTACIONES + CLASES;
 
@@ -248,7 +306,7 @@ namespace Xform.Analizador
             /* CONSTRUCTOR */
             CONSTRUCTOR.Rule = id + parizq + LISTA_PARAMETROS + parder + llaizq + SUPER +  SENTENCIAS + llader;
             /* FUNCION SUPER DEL METODO CONSTRUCTOR */
-            SUPER.Rule = pr_super + parizq + LISTA_VAL_PARAMETROS + parder
+            SUPER.Rule = pr_super + parizq + LISTA_VAL_PARAMETROS + parder + tk_ptcoma
 		            | Empty
 		            ;
 
@@ -401,9 +459,9 @@ namespace Xform.Analizador
 					            | pr_fechahora + parizq + cadena + parder
 					            ;
 
-            NATIVA_MULTIMEDIA.Rule = pr_imagen + parizq + EXPRESION + tk_coma + VBOOLEANO
-					            | pr_video + parizq + EXPRESION + tk_coma + VBOOLEANO
-					            | pr_audio + parizq + EXPRESION + tk_coma + VBOOLEANO
+            NATIVA_MULTIMEDIA.Rule = pr_imagen + parizq + EXPRESION + tk_coma + VBOOLEANO + parder
+					            | pr_video + parizq + EXPRESION + tk_coma + VBOOLEANO + parder
+					            | pr_audio + parizq + EXPRESION + tk_coma + VBOOLEANO + parder
 					            ;
 
             VBOOLEANO.Rule = pr_verdadero
@@ -418,7 +476,7 @@ namespace Xform.Analizador
             /* LISTA DE PARAMETROS ( PARAMETRO )*/
             LISTA_PARAMETROS.Rule = MakeStarRule(LISTA_PARAMETROS, tk_coma, PARAMETRO);
             LISTA_VAL_PARAMETROS.Rule = MakeStarRule(LISTA_VAL_PARAMETROS, tk_coma, EXPRESION);
-            PARAMETRO.Rule = TIPO + DIMENSIONES + id;
+            PARAMETRO.Rule = TIPO_DATO + DIMENSIONES + id;
 
 
 
@@ -451,13 +509,13 @@ namespace Xform.Analizador
 
             /* DECLARACIONES */
             DECLARACIONES.Rule = TIPO_DATO + VISIBILIDAD + id + tk_igual + pr_nuevo + TIPO_DATO + parizq + LISTA_PARAMETROS + parder
-                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tigual + pr_nuevo + TIPO_DATO + ACC_DIMENSIONES
-                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tigual + ASIG_DIMENSIONES
-                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tigual + EXPRESION
-                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tigual + pr_nulo
+                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tk_igual + pr_nuevo + TIPO_DATO + ACC_DIMENSIONES
+                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tk_igual + ASIG_DIMENSIONES
+                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tk_igual + EXPRESION
+                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tk_igual + pr_nulo
                             | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES
-                            | TIPO_DATO + VISIBILIDAD + id + tigual + pr_nulo
-                            | TIPO_DATO + VISIBILIDAD + id + tigual + EXPRESION
+                            | TIPO_DATO + VISIBILIDAD + id + tk_igual + pr_nulo
+                            | TIPO_DATO + VISIBILIDAD + id + tk_igual + EXPRESION
                             | TIPO_DATO + VISIBILIDAD + id
 				            ;
 
@@ -478,15 +536,15 @@ namespace Xform.Analizador
             /* SENTENCIAS */
             SENTENCIAS.Rule = MakeStarRule(SENTENCIAS, SENTENCIA);
 
-            SENTENCIA.Rule = IMPRIMIR + ptcoma
-                    | REPETIR + ptcoma
-                    | HACER + ptcoma
-                    | RETORNO + ptcoma
-                    | pr_continuar + ptcoma
-                    | pr_romper + ptcoma
-                    | LLAMADAS + ptcoma
-                    | ASIGNACION + ptcoma
-                    | DECLARACIONES + ptcoma
+            SENTENCIA.Rule = IMPRIMIR + tk_ptcoma
+                    | REPETIR + tk_ptcoma
+                    | HACER + tk_ptcoma
+                    | RETORNO + tk_ptcoma
+                    | pr_continuar + tk_ptcoma
+                    | pr_romper + tk_ptcoma
+                    | LLAMADAS + tk_ptcoma
+                    | ASIGNACION + tk_ptcoma
+                    | DECLARACIONES + tk_ptcoma
                     | SENT_SI
                     | PARA
                     | MIENTRAS
@@ -549,9 +607,9 @@ namespace Xform.Analizador
 
             CASOS_VALORES.Rule = MakePlusRule(CASOS_VALORES, CASO_VALOR);
 
-            CASO_VALOR.Rule = pr_valor + EXPRESION + dospuntos + llaizq + SENTENCIAS + llader;
+            CASO_VALOR.Rule = pr_valor + EXPRESION + tk_dospuntos + llaizq + SENTENCIAS + llader;
 
-            CASO_DEFECTO.Rule = pr_default + dospuntos + llaizq + SENTENCIAS + llader
+            CASO_DEFECTO.Rule = pr_default + tk_dospuntos + llaizq + SENTENCIAS + llader
 				            | Empty;
 
 
@@ -560,6 +618,28 @@ namespace Xform.Analizador
             RETORNO.Rule = pr_retorno
                     | pr_retorno + EXPRESION
                     ;
+
+
+            /**
+             * Precedencia y asociatividad
+             * Se resuelve la ambiguedad que puede haber al 
+             * generar el arbol sintactico
+             * */
+            #region PRECEDENCIA Y ASOCIATIVAD
+            RegisterOperators(8, Associativity.Right, tk_not, tk_pot);
+            RegisterOperators(7, Associativity.Left, tk_por, tk_div, tk_mod);
+            RegisterOperators(6, Associativity.Left, tk_mas, tk_menos);
+            RegisterOperators(5, Associativity.Left, tk_menor, tk_menigual, tk_mayor, tk_mayigual);
+            RegisterOperators(4, Associativity.Left, tk_igualr, tk_diferent);
+            RegisterOperators(3, Associativity.Left, tk_and);
+            RegisterOperators(2, Associativity.Left, tk_or);
+            #endregion
+
+            /**
+             * Indica la raiz del arbol que se generara y ademas es el 
+             * simbolo inicial donde comenzara la gramttica
+             * */
+            this.Root = INI;
         }
     }
 }

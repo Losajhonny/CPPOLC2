@@ -7,11 +7,20 @@ using System.Threading.Tasks;
 
 namespace Xform.Analizador
 {
+    /**
+     * @clase Reporte
+     * @autor        : Jhonatan Lopez
+     * @carnet       : 201325583
+     * @universidad  : USAC
+     * @facultad     : ingenieria
+     * */
+
     class Reporte
     {
-        private string path;
-
-        public void tablaErrores(List<Errors> lista)
+        /**
+         * generacion de la tabla de errores
+         * */
+        public static void tablaErrores(List<Errors> lista, string path)
         {
             string cuerpo = "";
             cuerpo += "<table align=" + Convert.ToChar(34) + "center" + Convert.ToChar(34) + "border=" + Convert.ToChar(34) + "1" + Convert.ToChar(34) + "width=1000>";
@@ -54,6 +63,7 @@ namespace Xform.Analizador
 
             cuerpo += cuerpoTabla + fin;
 
+            //definiendo la hora y fecha del reporte
             int año = DateTime.Now.Year;
             int mes = DateTime.Now.Month;
             int dia = DateTime.Now.Day;
@@ -68,7 +78,6 @@ namespace Xform.Analizador
             {
                 format = "am";
             }
-            //format = DateTime.Now.ToString();
 
             int minuto = DateTime.Now.Minute;
             int segundo = DateTime.Now.Second;
@@ -83,19 +92,15 @@ namespace Xform.Analizador
             System.IO.StreamWriter w = new System.IO.StreamWriter(path);
             w.WriteLine(pag);
             w.Close();
-
             Process.Start(path);
         }
 
-        public string Path
+        /**
+         * Retorna el nombre del mes en base a su numero
+         * */
+        public static string getMes(int mes)
         {
-            get { return path; }
-            set { path = value; }
-        }
-
-        public String getMes(int mes)
-        {
-            String m = "";
+            string m = "";
             switch (mes)
             {
                 case 1:

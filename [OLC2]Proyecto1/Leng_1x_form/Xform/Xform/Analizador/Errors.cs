@@ -6,8 +6,19 @@ using System.Threading.Tasks;
 
 namespace Xform.Analizador
 {
+    /**
+     * @clase Errors
+     * @autor        : Jhonatan Lopez
+     * @carnet       : 201325583
+     * @universidad  : USAC
+     * @facultad     : ingenieria
+     * */
+
     class Errors
     {
+        /**
+         * Atributos que definen la clase
+         * */
         private int linea;
         private int columna;
         private string tipo;
