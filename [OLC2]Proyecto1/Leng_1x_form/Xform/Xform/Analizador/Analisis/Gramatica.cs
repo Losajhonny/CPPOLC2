@@ -616,7 +616,7 @@ namespace Xform.Analizador.Analisis
              * Indica la raiz del arbol que se generara y ademas es el 
              * simbolo inicial donde comenzara la gramttica
              * */
-            this.Root = INI;
+            this.Root = EXPRESION;
         }
     }
 }

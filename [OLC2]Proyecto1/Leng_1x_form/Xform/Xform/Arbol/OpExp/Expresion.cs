@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xform.Analizador.Reportes;
+using Xform.Arbol.Sentencia.Tipo_Dato;
 
 namespace Xform.Arbol.OpExp
 {
@@ -23,37 +24,47 @@ namespace Xform.Arbol.OpExp
          * @op      operador que utiliza
          * @value   valor de la expresion
          * */
-        protected Expresion r1;
-        protected Expresion r2;
-        protected Operador op;
-        protected object value;
+        private Expresion r1;
+        private Expresion r2;
+        private Operador op;
+        private Tipo_Operacion top;
+
+
+        private TipoDato.Tipo tipo;
+        private object value;
         
         /**
          * Constructor para representar una expresion de 2 operandos
          * */
-        public Expresion(Expresion r1, Expresion r2, Operador op)
+        public Expresion(Expresion r1, Expresion r2, Operador op, Tipo_Operacion t)
         {
             this.r1 = r1;
             this.r2 = r2;
             this.op = op;
+            this.top = t;
+            this.tipo = TipoDato.Tipo.NINGUNO;
         }
 
         /**
          * Constructor para representar una expresion de 1 operando
          * */
-        public Expresion(Expresion r1, Operador op)
+        public Expresion(Expresion r1, Operador op, Tipo_Operacion t)
         {
             this.r1 = r1;
             this.op = op;
+            this.top = t;
+            this.tipo = TipoDato.Tipo.NINGUNO;
         }
 
         /**
          * Constructor para representar una expresion de 1 operando
          * */
-        public Expresion(Operador op, Expresion r2)
+        public Expresion(Operador op, Expresion r2, Tipo_Operacion t)
         {
             this.r2 = r2;
             this.op = op;
+            this.top = t;
+            this.tipo = TipoDato.Tipo.NINGUNO;
         }
 
         /**
@@ -65,15 +76,28 @@ namespace Xform.Arbol.OpExp
          * Los parametros sirven para indicar donde puede haber
          * un error semantico
          * */
-        public Expresion(object value, int linea, int columna, string level)
+        public Expresion(object value, int linea, int columna, TipoDato.Tipo tipo)
         {
             this.Linea = linea;
             this.Columna = columna;
-            this.Level = level;
             this.value = value;
+            this.tipo = tipo;
+            this.op = Operador.NINGUNO;
+            this.top = Tipo_Operacion.NINGUNO;
         }
 
+        /**
+         * Clase enum donde almacena el tipo de operacion que se realiza
+         * */
+        public enum Tipo_Operacion
+        {
+            ARITMETICA,
+            RELACIONAL,
+            LOGICO,
 
+            NINGUNO
+        }
+        
         /**
          * Clase enum donde almacena los operadores
          * Lista de operadores que funcionan para las expresiones
@@ -102,6 +126,82 @@ namespace Xform.Arbol.OpExp
             OR,
 
             NINGUNO
+        }
+
+        /**
+         * Retorna un operador de cualquier expresion
+         * */
+        public static Operador getOperador(string op)
+        {
+            if (op.Equals("+"))
+            {
+                return Operador.MAS;
+            }
+            else if (op.Equals("-"))
+            {
+                return Operador.MENOS;
+            }
+            else if (op.Equals("*"))
+            {
+                return Operador.POR;
+            }
+            else if (op.Equals("/"))
+            {
+                return Operador.DIV;
+            }
+            else if (op.Equals("^"))
+            {
+                return Operador.POT;
+            }
+            else if (op.Equals("%"))
+            {
+                return Operador.MOD;
+            }
+            else if (op.Equals("<="))
+            {
+                return Operador.MEN_IGUAL;
+            }
+            else if (op.Equals(">="))
+            {
+                return Operador.MAY_IGUAL;
+            }
+            else if (op.Equals("<"))
+            {
+                return Operador.MENOR;
+            }
+            else if (op.Equals(">"))
+            {
+                return Operador.MAYOR;
+            }
+            else if (op.Equals("=="))
+            {
+                return Operador.IGUAL;
+            }
+            else if (op.Equals("!="))
+            {
+                return Operador.DIFERENTE;
+            }
+            else if (op.Equals("&&"))
+            {
+                return Operador.AND;
+            }
+            else if (op.Equals("||"))
+            {
+                return Operador.OR;
+            }
+            else if (op.Equals("!"))
+            {
+                return Operador.NOT;
+            }
+            else if (op.Equals("++"))
+            {
+                return Operador.DMAS;
+            }
+            else if (op.Equals("--"))
+            {
+                return Operador.DMENOS;
+            }
+            return Operador.NINGUNO;
         }
 
         public object ejecutar()

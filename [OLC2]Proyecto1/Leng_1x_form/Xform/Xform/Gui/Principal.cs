@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Xform.Analizador.Analisis;
 using Xform.Analizador.Reportes;
+using Xform.Arbol.Ast;
 
 namespace Xform.Gui
 {
@@ -111,13 +112,17 @@ namespace Xform.Gui
         {
             TabPage tp = (TabPage)tab_control.SelectedTab;
             ParseTreeNode raiz = Sintactico.analizar(tp.Rtb_page.Text);
+            Arbols tree = new Arbols();
             if (raiz == null)
             {
                 rtb_consola.Text = "error";
+                MessageBox.Show("error");
             }
             else
             {
                 rtb_consola.Text = "";
+                object a = tree.EXPRESION(raiz);
+                MessageBox.Show("analisis sin errores");
             }
         }
     }

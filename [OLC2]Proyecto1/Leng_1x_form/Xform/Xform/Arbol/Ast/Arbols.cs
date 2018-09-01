@@ -5,18 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xform.Arbol.OpExp;
+using Xform.Arbol.Sentencia.Tipo_Dato;
 
 namespace Xform.Arbol.Ast
 {
     /**
-     * @clase Arbol
+     * @clase Arbols
      * @autor        : Jhonatan Lopez
      * @carnet       : 201325583
      * @universidad  : USAC
      * @facultad     : ingenieria
      * */
 
-    class Arbol
+    class Arbols
     {
         /**
          * Clase que retorna el arbol para su ejecucion
@@ -47,11 +48,11 @@ namespace Xform.Arbol.Ast
                     }
                     else if (padre.ChildNodes[0].ToString().Equals("OPERADOR"))
                     {
-
+                        exp = OPERADOR(padre.ChildNodes[0]);
                     }
                     else if (padre.ChildNodes[0].ToString().Equals("FACTOR"))
                     {
-
+                        exp = FACTOR(padre.ChildNodes[0]);
                     }
                     else if (padre.ChildNodes[0].ToString().Equals("LLAMADAS"))
                     {
@@ -77,12 +78,12 @@ namespace Xform.Arbol.Ast
             {
                 case 2:// ( tmenos | tmas ) EXPRESION
                     Expresion r = EXPRESION(padre.ChildNodes[1]);
-                    exp = new Expresion(operadorExp(padre.ChildNodes[0].Token.Text), r);
+                    exp = new Expresion(Expresion.getOperador(padre.ChildNodes[0].Token.Text), r, Expresion.Tipo_Operacion.ARITMETICA);
                     break;
                 case 3:// EXPRESION op EXPRESION
                     Expresion r1 = EXPRESION(padre.ChildNodes[0]);
-                    Expresion r2 = EXPRESION(padre.ChildNodes[2]);                    
-                    exp = new Expresion(r1, r2, operadorExp(padre.ChildNodes[1].Token.Text));
+                    Expresion r2 = EXPRESION(padre.ChildNodes[2]);
+                    exp = new Expresion(r1, r2, Expresion.getOperador(padre.ChildNodes[1].Token.Text), Expresion.Tipo_Operacion.ARITMETICA);
                     break;
                 default:
                     break;
@@ -99,7 +100,7 @@ namespace Xform.Arbol.Ast
             //EXPRESION op EXPRESION
             Expresion r1 = EXPRESION(padre.ChildNodes[0]);
             Expresion r2 = EXPRESION(padre.ChildNodes[2]);
-            exp = new Expresion(r1, r2, operadorExp(padre.ChildNodes[1].Token.Text));
+            exp = new Expresion(r1, r2, Expresion.getOperador(padre.ChildNodes[1].Token.Text), Expresion.Tipo_Operacion.RELACIONAL);
 
             return exp;
         }
@@ -114,12 +115,12 @@ namespace Xform.Arbol.Ast
             {
                 case 2:// not EXPRESION
                     Expresion r = EXPRESION(padre.ChildNodes[1]);
-                    exp = new Expresion(operadorExp(padre.ChildNodes[0].Token.Text), r);
+                    exp = new Expresion(Expresion.getOperador(padre.ChildNodes[0].Token.Text), r, Expresion.Tipo_Operacion.LOGICO);
                     break;
                 case 3:// EXPRESION op EXPRESION
                     Expresion r1 = EXPRESION(padre.ChildNodes[0]);
                     Expresion r2 = EXPRESION(padre.ChildNodes[2]);
-                    exp = new Expresion(r1, r2, operadorExp(padre.ChildNodes[1].Token.Text));
+                    exp = new Expresion(r1, r2, Expresion.getOperador(padre.ChildNodes[1].Token.Text), Expresion.Tipo_Operacion.LOGICO);
                     break;
                 default:
                     break;
@@ -137,12 +138,12 @@ namespace Xform.Arbol.Ast
             if (padre.ChildNodes[0].ToString().Equals("EXPRESION"))
             {// EXPRESION ( dmas | dmenos )
                 Expresion r = EXPRESION(padre.ChildNodes[0]);
-                exp = new Expresion(r, operadorExp(padre.ChildNodes[1].Token.Text));
+                exp = new Expresion(r, Expresion.getOperador(padre.ChildNodes[1].Token.Text), Expresion.Tipo_Operacion.ARITMETICA);
             }
             else
             {// ( dmas | dmenos ) EXPRESION
                 Expresion r = EXPRESION(padre.ChildNodes[1]);
-                exp = new Expresion(operadorExp(padre.ChildNodes[0].Token.Text), r);
+                exp = new Expresion(Expresion.getOperador(padre.ChildNodes[0].Token.Text), r, Expresion.Tipo_Operacion.ARITMETICA);
             }
             return exp;
         }
@@ -153,38 +154,26 @@ namespace Xform.Arbol.Ast
         public Expresion FACTOR(ParseTreeNode padre)
         {
             Expresion exp = null;
+            if (padre.ChildNodes[0].ToString().Equals("VBOOLEANO"))
+            {
+                exp = VBOOLEANO(padre.ChildNodes[0]);
+            }
+            else
+            {
+                exp = new Expresion(padre.ChildNodes[0].Token.Text, padre.ChildNodes[0].Token.Location.Line,
+                    padre.ChildNodes[0].Token.Location.Column, TipoDato.getTipo(padre.ChildNodes[0].Token.Terminal.Name));
+            }
             return exp;
         }
+
         /**
-         * Retorna un operador de cualquier expresion
+         * Retorna el arbol de una expresion booleana
          * */
-        public Expresion.Operador operadorExp(string op)
+        public Expresion VBOOLEANO(ParseTreeNode padre)
         {
-            if (op.Equals("+"))
-            {
-                return Expresion.Operador.MAS;
-            }
-            else if (op.Equals("-"))
-            {
-                return Expresion.Operador.MENOS;
-            }
-            else if (op.Equals("*"))
-            {
-                return Expresion.Operador.POR;
-            }
-            else if (op.Equals("/"))
-            {
-                return Expresion.Operador.DIV;
-            }
-            else if (op.Equals("^"))
-            {
-                return Expresion.Operador.POT;
-            }
-            else if (op.Equals("%"))
-            {
-                return Expresion.Operador.MOD;
-            }
-            return Expresion.Operador.NINGUNO;
+            Expresion exp = new Expresion(padre.ChildNodes[0].Token.Text, padre.ChildNodes[0].Token.Location.Line,
+                    padre.ChildNodes[0].Token.Location.Column, TipoDato.getTipo(padre.ChildNodes[0].Token.Terminal.Name));
+            return exp;
         }
     }
 }
