@@ -416,8 +416,8 @@ namespace Xform.Analizador.Analisis
 			            ;
 
             NATIVA_CADENA.Rule = pr_cadena + parizq + EXPRESION + parder 	// fun nat cadena
-			            | pr_subcad + parizq + cadena + tk_coma + EXPRESION + tk_coma + EXPRESION + parder
-			            | pr_poscad + parizq + cadena + tk_coma + EXPRESION + parder
+			            | pr_subcad + parizq + EXPRESION + tk_coma + EXPRESION + tk_coma + EXPRESION + parder
+			            | pr_poscad + parizq + EXPRESION + tk_coma + EXPRESION + parder
 			            ;
 
             NATIVA_BOOLEANA.Rule = pr_booleano + parizq + EXPRESION + parder;

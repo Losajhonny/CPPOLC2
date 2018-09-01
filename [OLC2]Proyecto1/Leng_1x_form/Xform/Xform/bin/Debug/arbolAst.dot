@@ -1,20 +1,20 @@
 digraph grafo{
 node [shape = egg];
-63238509[label="EXPRESION", style = filled, color = lightblue];
-11679222[label="ARITMETICA", style = filled, color = lightblue];
-63238509->11679222;
-35410979[label="EXPRESION", style = filled, color = lightblue];
-11679222->35410979;
-57416410[label="FACTOR", style = filled, color = lightblue];
-35410979->57416410;
-61940669[label="2 (ENTERO)", style = filled, color = lightblue];
-57416410->61940669;
-15193904[label="+ (Key symbol)", style = filled, color = lightblue];
-11679222->15193904;
-6303833[label="EXPRESION", style = filled, color = lightblue];
-11679222->6303833;
-40452378[label="FACTOR", style = filled, color = lightblue];
-6303833->40452378;
-36009496[label="9 (ENTERO)", style = filled, color = lightblue];
-40452378->36009496;
+9343812[label="EXPRESION", style = filled, color = lightblue];
+17818390[label="ARITMETICA", style = filled, color = lightblue];
+9343812->17818390;
+63630067[label="EXPRESION", style = filled, color = lightblue];
+17818390->63630067;
+44780731[label="FACTOR", style = filled, color = lightblue];
+63630067->44780731;
+1867017[label="re (ID)", style = filled, color = lightblue];
+44780731->1867017;
+16906910[label="+ (Key symbol)", style = filled, color = lightblue];
+17818390->16906910;
+22613453[label="EXPRESION", style = filled, color = lightblue];
+17818390->22613453;
+10972427[label="FACTOR", style = filled, color = lightblue];
+22613453->10972427;
+23997172[label="9 (ENTERO)", style = filled, color = lightblue];
+10972427->23997172;
 }

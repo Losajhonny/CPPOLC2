@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xform.Analizador.Reportes;
 using Xform.Arbol.Sentencia.Tipo_Dato;
+using Xform.Arbol.Sentencia.SLlamada;
 
 namespace Xform.Arbol.OpExp
 {
@@ -16,13 +17,17 @@ namespace Xform.Arbol.OpExp
      * @facultad     : ingenieria
      * */
 
-    class Expresion : Posicion, Sentencia.Sentencia
+    class Expresion : Posicion
     {
         /**
          * @r1      operando izquierda
          * @r2      operando derecha
          * @op      operador que utiliza
+         * @top     tipo de operacion que se va a realizar
+         * @tipo    tipo de dato que dal value
          * @value   valor de la expresion
+         * @isLlamada para verificar si es una llamada o expresion
+         * @llamada es una funcion o variable con arreglos
          * */
         private Expresion r1;
         private Expresion r2;
@@ -32,6 +37,10 @@ namespace Xform.Arbol.OpExp
 
         private TipoDato.Tipo tipo;
         private object value;
+
+
+        private bool isLlamada;
+        private Llamada llamada;
         
         /**
          * Constructor para representar una expresion de 2 operandos
@@ -43,6 +52,7 @@ namespace Xform.Arbol.OpExp
             this.op = op;
             this.top = t;
             this.tipo = TipoDato.Tipo.NINGUNO;
+            this.isLlamada = false;
         }
 
         /**
@@ -54,6 +64,7 @@ namespace Xform.Arbol.OpExp
             this.op = op;
             this.top = t;
             this.tipo = TipoDato.Tipo.NINGUNO;
+            this.isLlamada = false;
         }
 
         /**
@@ -65,6 +76,7 @@ namespace Xform.Arbol.OpExp
             this.op = op;
             this.top = t;
             this.tipo = TipoDato.Tipo.NINGUNO;
+            this.isLlamada = false;
         }
 
         /**
@@ -84,6 +96,19 @@ namespace Xform.Arbol.OpExp
             this.tipo = tipo;
             this.op = Operador.NINGUNO;
             this.top = Tipo_Operacion.NINGUNO;
+            this.isLlamada = false;
+        }
+
+        /**
+         * Constructor para representar una expresion con una llamada
+         * */
+        public Expresion(Llamada llamada)
+        {
+            this.llamada = llamada;
+            this.isLlamada = true;
+            this.op = Operador.NINGUNO;
+            this.top = Tipo_Operacion.NINGUNO;
+            this.tipo = TipoDato.Tipo.NINGUNO;
         }
 
         /**
@@ -202,11 +227,6 @@ namespace Xform.Arbol.OpExp
                 return Operador.DMENOS;
             }
             return Operador.NINGUNO;
-        }
-
-        public object ejecutar()
-        {
-            throw new NotImplementedException();
         }
     }
 }
