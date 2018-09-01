@@ -50,11 +50,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Analizador\Errors.cs" />
-    <Compile Include="Analizador\Gramatica.cs" />
-    <Compile Include="Analizador\Gramaticas.cs" />
-    <Compile Include="Analizador\Reporte.cs" />
-    <Compile Include="Analizador\Sintactico.cs" />
+    <Compile Include="Analizador\Reportes\Errors.cs" />
+    <Compile Include="Analizador\Analisis\Gramatica.cs" />
+    <Compile Include="Analizador\Reportes\Posicion.cs" />
+    <Compile Include="Analizador\Reportes\Reporte.cs" />
+    <Compile Include="Analizador\Analisis\Sintactico.cs" />
+    <Compile Include="Arbol\Ast\Arbol.cs" />
+    <Compile Include="Arbol\OpExp\Aritmetica.cs" />
+    <Compile Include="Arbol\OpExp\Expresion.cs" />
+    <Compile Include="Arbol\OpExp\Logica.cs" />
+    <Compile Include="Arbol\OpExp\Relacional.cs" />
+    <Compile Include="Arbol\Sentencia\Sentencia.cs" />
     <Compile Include="Gui\Principal.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -91,6 +97,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

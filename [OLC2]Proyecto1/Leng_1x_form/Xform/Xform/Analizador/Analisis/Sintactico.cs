@@ -6,8 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xform.Analizador.Reportes;
 
-namespace Xform.Analizador
+namespace Xform.Analizador.Analisis
 {
     /**
      * @clase Sintactico
@@ -66,8 +67,13 @@ namespace Xform.Analizador
                     for (int j = 0; j < arbol.ParserMessages[i].ParserState.ExpectedTerminals.Count; j++)
                     {
                         if (j == 0)
+                        {
                             cad += arbol.ParserMessages[i].ParserState.ExpectedTerminals.ElementAt(j).Name;
-                        cad += ", " + arbol.ParserMessages[i].ParserState.ExpectedTerminals.ElementAt(j).ToString();
+                        }
+                        else
+                        {
+                            cad += ", " + arbol.ParserMessages[i].ParserState.ExpectedTerminals.ElementAt(j).ToString();
+                        }
                     }
                     cad = "Se esperaba: " + cad;
                     //agregando el error que se encontro

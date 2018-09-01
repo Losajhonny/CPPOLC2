@@ -8,7 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Xform.Analizador;
+using Xform.Analizador.Analisis;
+using Xform.Analizador.Reportes;
 
 namespace Xform.Gui
 {
