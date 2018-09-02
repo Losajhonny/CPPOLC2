@@ -1,16 +1,16 @@
 digraph grafo{
 node [shape = egg];
-10261382[label="EXPRESION", style = filled, color = lightblue];
-59109011[label="LLAMADAS", style = filled, color = lightblue];
-10261382->59109011;
-42659827[label="MLLAMADAS", style = filled, color = lightblue];
-59109011->42659827;
-40644060[label="LLAMADA", style = filled, color = lightblue];
-42659827->40644060;
-17043416[label="id (ID)", style = filled, color = lightblue];
-40644060->17043416;
-28756230[label="LLAMADA", style = filled, color = lightblue];
-42659827->28756230;
-18961937[label="id (ID)", style = filled, color = lightblue];
-28756230->18961937;
+44150175[label="EXPRESION", style = filled, color = lightblue];
+65326725[label="LLAMADAS", style = filled, color = lightblue];
+44150175->65326725;
+61150033[label="NLLAMADAS", style = filled, color = lightblue];
+65326725->61150033;
+24123405[label="NATIVA_NUMERICA", style = filled, color = lightblue];
+61150033->24123405;
+49535530[label="pi (Keyword)", style = filled, color = lightblue];
+24123405->49535530;
+17690816[label="( (Key symbol)", style = filled, color = lightblue];
+24123405->17690816;
+54234833[label=") (Key symbol)", style = filled, color = lightblue];
+24123405->54234833;
 }

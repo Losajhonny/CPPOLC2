@@ -425,9 +425,10 @@ namespace Xform.Analizador.Analisis
             NATIVA_NUMERICA.Rule = pr_entero + parizq + LISTA_VAL_PARAMETROS + parder // ARGUMENTOS LISTA VALORES PARAMETROS
 				            | pr_tam + parizq + EXPRESION + parder
 				            | pr_random + parizq + LISTA_VAL_PARAMETROS + parder
+                            | pr_random + parizq + parder
 				            | pr_min + parizq + LISTA_VAL_PARAMETROS + parder
 				            | pr_max + parizq + LISTA_VAL_PARAMETROS + parder
-				            | pr_pow + parizq + EXPRESION + tk_coma + entero + parder
+				            | pr_pow + parizq + EXPRESION + tk_coma + EXPRESION + parder
 				            | pr_log + parizq + EXPRESION + parder
 				            | pr_log10 + parizq + EXPRESION + parder
 				            | pr_abs + parizq + EXPRESION + parder

@@ -261,7 +261,35 @@ namespace Xform.Arbol.Ast
          * */
         public Llamada NATIVA_NUMERICA(ParseTreeNode padre)
         {
-
+            Llamada llamada = null;
+            switch (padre.ChildNodes.Count)
+            {
+                case 3:
+                    llamada = new Llamada(Llamada.getNativa(padre.ChildNodes[0].Term.Name), null);
+                    break;
+                case 4:
+                    if(padre.ChildNodes[0].Token.Text.ToLower().Equals("entero") ||
+                        padre.ChildNodes[0].Token.Text.ToLower().Equals("random") ||
+                        padre.ChildNodes[0].Token.Text.ToLower().Equals("max") ||
+                        padre.ChildNodes[0].Token.Text.ToLower().Equals("min"))
+                    {
+                        llamada = new Llamada(Llamada.getNativa(padre.ChildNodes[0].Term.Name), LISTA_VAL_PARAMETROS(padre.ChildNodes[2]));
+                    }
+                    else
+                    {
+                        List<Expresion> lista = new List<Expresion>();
+                        lista.Add(EXPRESION(padre.ChildNodes[2]));
+                        llamada = new Llamada(Llamada.getNativa(padre.ChildNodes[0].Term.Name), lista);
+                    }
+                    break;
+                default:
+                    List<Expresion> listas = new List<Expresion>();
+                    listas.Add(EXPRESION(padre.ChildNodes[2]));
+                    listas.Add(EXPRESION(padre.ChildNodes[4]));
+                    llamada = new Llamada(Llamada.getNativa(padre.ChildNodes[0].Term.Name), listas);
+                    break;
+            }
+            return llamada;
         }
 
         public Llamada NATIVA_BOOLEANA(ParseTreeNode padre)
@@ -277,12 +305,24 @@ namespace Xform.Arbol.Ast
 
         public Llamada NATIVA_FECHAHORA(ParseTreeNode padre)
         {
-
+            Llamada llamada = null;
+            List<Expresion> lista = new List<Expresion>();
+            switch (padre.ChildNodes.Count)
+            {
+                case 3:
+                    llamada = new Llamada(Llamada.getNativa(padre.ChildNodes[0].Term.Name), null);
+                    break;
+                default:
+                    lista.Add(EXPRESION(padre.ChildNodes[2]));
+                    llamada = new Llamada(Llamada.getNativa(padre.ChildNodes[0].Term.Name), lista);
+                    break;
+            }
+            return llamada;
         }
 
         public Llamada NATIVA_MULTIMEDIA(ParseTreeNode padre)
         {
-
+            return null;
         }
         /**
          * Retorna lista de llamadas

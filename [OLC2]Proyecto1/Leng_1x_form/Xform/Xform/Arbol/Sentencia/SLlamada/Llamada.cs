@@ -116,5 +116,88 @@ namespace Xform.Arbol.Sentencia.SLlamada
 
             NINGUNO
         }
+
+        /**
+         * Retorna el tipo_nativa
+         * */
+        public static Tipo_Nativa getNativa(string value)
+        {
+            if (value.ToLower().Equals("entero"))
+            {
+                return Tipo_Nativa.ENTERO;
+            }
+            else if (value.ToLower().Equals("tam"))
+            {
+                return Tipo_Nativa.TAM;
+            }
+            else if (value.ToLower().Equals("random"))
+            {
+                return Tipo_Nativa.RANDOM;
+            }
+            else if (value.ToLower().Equals("min"))
+            {
+                return Tipo_Nativa.MIN;
+            }
+            else if (value.ToLower().Equals("max"))
+            {
+                return Tipo_Nativa.MAX;
+            }
+            else if (value.ToLower().Equals("pow"))
+            {
+                return Tipo_Nativa.POW;
+            }
+            else if (value.ToLower().Equals("log"))
+            {
+                return Tipo_Nativa.LOG;
+            }
+            else if (value.ToLower().Equals("log10"))
+            {
+                return Tipo_Nativa.LOG10;
+            }
+            else if (value.ToLower().Equals("abs"))
+            {
+                return Tipo_Nativa.ABS;
+            }
+            else if (value.ToLower().Equals("sin"))
+            {
+                return Tipo_Nativa.SIN;
+            }
+            else if (value.ToLower().Equals("cos"))
+            {
+                return Tipo_Nativa.COS;
+            }
+            else if (value.ToLower().Equals("tan"))
+            {
+                return Tipo_Nativa.TAN;
+            }
+            else if (value.ToLower().Equals("sqrt"))
+            {
+                return Tipo_Nativa.SQRT;
+            }
+            else if (value.ToLower().Equals("pi"))
+            {
+                return Tipo_Nativa.PI;
+            }
+            else if (value.ToLower().Equals("hoy"))
+            {
+                return Tipo_Nativa.HOY;
+            }
+            else if (value.ToLower().Equals("ahora"))
+            {
+                return Tipo_Nativa.AHORA;
+            }
+            else if (value.ToLower().Equals("fecha"))
+            {
+                return Tipo_Nativa.FECHA;
+            }
+            else if (value.ToLower().Equals("hora"))
+            {
+                return Tipo_Nativa.HORA;
+            }
+            else
+            {
+                return Tipo_Nativa.FECHAHORA;
+            }
+        }
     }
 }
