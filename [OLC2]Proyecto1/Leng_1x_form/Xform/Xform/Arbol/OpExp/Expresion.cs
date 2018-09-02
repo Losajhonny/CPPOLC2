@@ -31,15 +31,14 @@ namespace Xform.Arbol.OpExp
          * */
         private Expresion r1;
         private Expresion r2;
-        private Operador op;
-        private Tipo_Operacion top;
+        private Operador operacion;
+        private Tipo_Operacion toperacion;
 
 
         private TipoDato.Tipo tipo;
         private object value;
 
 
-        private bool isLlamada;
         private Llamada llamada;
         
         /**
@@ -49,10 +48,9 @@ namespace Xform.Arbol.OpExp
         {
             this.r1 = r1;
             this.r2 = r2;
-            this.op = op;
-            this.top = t;
+            this.operacion = op;
+            this.toperacion = t;
             this.tipo = TipoDato.Tipo.NINGUNO;
-            this.isLlamada = false;
         }
 
         /**
@@ -61,10 +59,9 @@ namespace Xform.Arbol.OpExp
         public Expresion(Expresion r1, Operador op, Tipo_Operacion t)
         {
             this.r1 = r1;
-            this.op = op;
-            this.top = t;
+            this.operacion = op;
+            this.toperacion = t;
             this.tipo = TipoDato.Tipo.NINGUNO;
-            this.isLlamada = false;
         }
 
         /**
@@ -73,10 +70,9 @@ namespace Xform.Arbol.OpExp
         public Expresion(Operador op, Expresion r2, Tipo_Operacion t)
         {
             this.r2 = r2;
-            this.op = op;
-            this.top = t;
+            this.operacion = op;
+            this.toperacion = t;
             this.tipo = TipoDato.Tipo.NINGUNO;
-            this.isLlamada = false;
         }
 
         /**
@@ -94,20 +90,18 @@ namespace Xform.Arbol.OpExp
             this.Columna = columna;
             this.value = value;
             this.tipo = tipo;
-            this.op = Operador.NINGUNO;
-            this.top = Tipo_Operacion.NINGUNO;
-            this.isLlamada = false;
+            this.operacion = Operador.NINGUNO;
+            this.toperacion = Tipo_Operacion.NINGUNO;
         }
 
         /**
          * Constructor para representar una expresion con una llamada
          * */
-        public Expresion(Llamada llamada)
+        public Expresion(Llamada llamada, Tipo_Operacion toperacion)
         {
             this.llamada = llamada;
-            this.isLlamada = true;
-            this.op = Operador.NINGUNO;
-            this.top = Tipo_Operacion.NINGUNO;
+            this.operacion = Operador.NINGUNO;
+            this.toperacion = toperacion;
             this.tipo = TipoDato.Tipo.NINGUNO;
         }
 
@@ -119,7 +113,7 @@ namespace Xform.Arbol.OpExp
             ARITMETICA,
             RELACIONAL,
             LOGICO,
-
+            LLAMADA,
             NINGUNO
         }
         

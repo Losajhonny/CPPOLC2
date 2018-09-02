@@ -402,7 +402,7 @@ namespace Xform.Analizador.Analisis
 
             MLLAMADAS.Rule = MakePlusRule(MLLAMADAS, tk_punto, LLAMADA);
 
-            LLAMADA.Rule = id + parizq + LISTA_VAL_PARAMETROS + parder //llamada a una clase
+            LLAMADA.Rule = id + parizq + LISTA_VAL_PARAMETROS + parder //llamada a un metodo
 			            | id + ACC_DIMENSIONES 				//llamada a un arreglo
 			            | id								//llamada a un atributo o declaracion
 			            | pr_este 							//llamada a su propia clase
@@ -440,14 +440,14 @@ namespace Xform.Analizador.Analisis
 
             NATIVA_FECHAHORA.Rule = pr_hoy + parizq + parder
 					            | pr_ahora + parizq + parder
-					            | pr_fecha + parizq + cadena + parder
-					            | pr_hora + parizq + cadena + parder
-					            | pr_fechahora + parizq + cadena + parder
+					            | pr_fecha + parizq + EXPRESION + parder
+					            | pr_hora + parizq + EXPRESION + parder
+					            | pr_fechahora + parizq + EXPRESION + parder
 					            ;
 
-            NATIVA_MULTIMEDIA.Rule = pr_imagen + parizq + EXPRESION + tk_coma + VBOOLEANO + parder
-					            | pr_video + parizq + EXPRESION + tk_coma + VBOOLEANO + parder
-					            | pr_audio + parizq + EXPRESION + tk_coma + VBOOLEANO + parder
+            NATIVA_MULTIMEDIA.Rule = pr_imagen + parizq + EXPRESION + tk_coma + EXPRESION + parder
+					            | pr_video + parizq + EXPRESION + tk_coma + EXPRESION + parder
+					            | pr_audio + parizq + EXPRESION + tk_coma + EXPRESION + parder
 					            ;
 
             VBOOLEANO.Rule = pr_verdadero

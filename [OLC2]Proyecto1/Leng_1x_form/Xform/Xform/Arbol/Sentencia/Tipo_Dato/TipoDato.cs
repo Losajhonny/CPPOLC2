@@ -67,6 +67,10 @@ namespace Xform.Arbol.Sentencia.Tipo_Dato
             {
                 return Tipo.RESPUESTAS;
             }
+            else if (value.ToLower().Equals("id"))
+            {
+                return Tipo.ID;
+            }
             return Tipo.NINGUNO;
         }
     }
