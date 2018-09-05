@@ -1,16 +1,22 @@
 digraph grafo{
 node [shape = egg];
-44150175[label="EXPRESION", style = filled, color = lightblue];
-65326725[label="LLAMADAS", style = filled, color = lightblue];
-44150175->65326725;
-61150033[label="NLLAMADAS", style = filled, color = lightblue];
-65326725->61150033;
-24123405[label="NATIVA_NUMERICA", style = filled, color = lightblue];
-61150033->24123405;
-49535530[label="pi (Keyword)", style = filled, color = lightblue];
-24123405->49535530;
-17690816[label="( (Key symbol)", style = filled, color = lightblue];
-24123405->17690816;
-54234833[label=") (Key symbol)", style = filled, color = lightblue];
-24123405->54234833;
+46459796[label="EXPRESION", style = filled, color = lightblue];
+10316078[label="LLAMADAS", style = filled, color = lightblue];
+46459796->10316078;
+61570335[label="NLLAMADAS", style = filled, color = lightblue];
+10316078->61570335;
+19201658[label="NATIVA_CADENA", style = filled, color = lightblue];
+61570335->19201658;
+58768244[label="cadena (Keyword)", style = filled, color = lightblue];
+19201658->58768244;
+27325289[label="( (Key symbol)", style = filled, color = lightblue];
+19201658->27325289;
+21678481[label="EXPRESION", style = filled, color = lightblue];
+19201658->21678481;
+36007586[label="FACTOR", style = filled, color = lightblue];
+21678481->36007586;
+9728678[label="val1 (ID)", style = filled, color = lightblue];
+36007586->9728678;
+35137340[label=") (Key symbol)", style = filled, color = lightblue];
+19201658->35137340;
 }

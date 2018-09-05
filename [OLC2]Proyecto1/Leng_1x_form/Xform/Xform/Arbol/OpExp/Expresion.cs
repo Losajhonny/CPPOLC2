@@ -31,8 +31,8 @@ namespace Xform.Arbol.OpExp
          * */
         private Expresion r1;
         private Expresion r2;
-        private Operador operacion;
-        private Tipo_Operacion toperacion;
+        private Operador operador;
+        private Tipo_Operacion operacion;
 
 
         private TipoDato.Tipo tipo;
@@ -44,34 +44,34 @@ namespace Xform.Arbol.OpExp
         /**
          * Constructor para representar una expresion de 2 operandos
          * */
-        public Expresion(Expresion r1, Expresion r2, Operador op, Tipo_Operacion t)
+        public Expresion(Expresion r1, Expresion r2, Operador operador, Tipo_Operacion operacion)
         {
             this.r1 = r1;
             this.r2 = r2;
-            this.operacion = op;
-            this.toperacion = t;
+            this.operador = operador;
+            this.operacion = operacion;
             this.tipo = TipoDato.Tipo.NINGUNO;
         }
 
         /**
          * Constructor para representar una expresion de 1 operando
          * */
-        public Expresion(Expresion r1, Operador op, Tipo_Operacion t)
+        public Expresion(Expresion r1, Operador operador, Tipo_Operacion operacion)
         {
             this.r1 = r1;
-            this.operacion = op;
-            this.toperacion = t;
+            this.operador = operador;
+            this.operacion = operacion;
             this.tipo = TipoDato.Tipo.NINGUNO;
         }
 
         /**
          * Constructor para representar una expresion de 1 operando
          * */
-        public Expresion(Operador op, Expresion r2, Tipo_Operacion t)
+        public Expresion(Operador operador, Expresion r2, Tipo_Operacion operacion)
         {
             this.r2 = r2;
-            this.operacion = op;
-            this.toperacion = t;
+            this.operador = operador;
+            this.operacion = operacion;
             this.tipo = TipoDato.Tipo.NINGUNO;
         }
 
@@ -90,18 +90,18 @@ namespace Xform.Arbol.OpExp
             this.Columna = columna;
             this.value = value;
             this.tipo = tipo;
-            this.operacion = Operador.NINGUNO;
-            this.toperacion = Tipo_Operacion.NINGUNO;
+            this.operador = Operador.NINGUNO;
+            this.operacion = Tipo_Operacion.NINGUNO;
         }
 
         /**
          * Constructor para representar una expresion con una llamada
          * */
-        public Expresion(Llamada llamada, Tipo_Operacion toperacion)
+        public Expresion(Llamada llamada, Tipo_Operacion operacion)
         {
             this.llamada = llamada;
-            this.operacion = Operador.NINGUNO;
-            this.toperacion = toperacion;
+            this.operador = Operador.NINGUNO;
+            this.operacion = operacion;
             this.tipo = TipoDato.Tipo.NINGUNO;
         }
 

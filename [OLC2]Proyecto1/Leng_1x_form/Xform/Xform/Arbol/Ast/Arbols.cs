@@ -31,42 +31,39 @@ namespace Xform.Arbol.Ast
          * */
         public Expresion EXPRESION(ParseTreeNode padre)
         {
-            Expresion exp = null;
             switch (padre.ChildNodes.Count)
             {
                 case 1:
                     if (padre.ChildNodes[0].Term.Name.Equals("ARITMETICA"))
                     {
-                        exp = ARITMETICA(padre.ChildNodes[0]);
+                        return ARITMETICA(padre.ChildNodes[0]);
                     }
                     else if (padre.ChildNodes[0].Term.Name.Equals("RELACIONAL"))
                     {
-                        exp = RELACIONAL(padre.ChildNodes[0]);
+                        return RELACIONAL(padre.ChildNodes[0]);
                     }
                     else if (padre.ChildNodes[0].Term.Name.Equals("LOGICA"))
                     {
-                        exp = LOGICA(padre.ChildNodes[0]);
+                        return LOGICA(padre.ChildNodes[0]);
                     }
                     else if (padre.ChildNodes[0].Term.Name.Equals("OPERADOR"))
                     {
-                        exp = OPERADOR(padre.ChildNodes[0]);
+                        return OPERADOR(padre.ChildNodes[0]);
                     }
                     else if (padre.ChildNodes[0].Term.Name.Equals("FACTOR"))
                     {
-                        exp = FACTOR(padre.ChildNodes[0]);
+                        return FACTOR(padre.ChildNodes[0]);
                     }
                     else if (padre.ChildNodes[0].Term.Name.Equals("LLAMADAS"))
                     {
-                        exp = new Expresion(LLAMADAS(padre.ChildNodes[0]), Expresion.Tipo_Operacion.LLAMADA);
+                        return new Expresion(LLAMADAS(padre.ChildNodes[0]), Expresion.Tipo_Operacion.LLAMADA);
                     }
-                    break;
+                    return null;
                 case 3:// ( EXPRESION )
-                    exp = EXPRESION(padre.ChildNodes[1]);
-                    break;
+                    return EXPRESION(padre.ChildNodes[1]);
                 default:
-                    break;
+                    return null;
             }
-            return exp;
         }
 
         /**
@@ -74,22 +71,21 @@ namespace Xform.Arbol.Ast
          * */
         public Expresion ARITMETICA(ParseTreeNode padre)
         {
-            Expresion exp = null;
             switch (padre.ChildNodes.Count)
             {
-                case 2:// ( tmenos | tmas ) EXPRESION
+                case 2:// ( tmenos | tmas ) EXPRESION   [Unarios]
                     Expresion r = EXPRESION(padre.ChildNodes[1]);
-                    exp = new Expresion(Expresion.getOperador(padre.ChildNodes[0].Token.Text), r, Expresion.Tipo_Operacion.ARITMETICA);
-                    break;
+                    return new Expresion(Expresion.getOperador(padre.ChildNodes[0].Token.Text), 
+                        r, Expresion.Tipo_Operacion.ARITMETICA);
                 case 3:// EXPRESION op EXPRESION
                     Expresion r1 = EXPRESION(padre.ChildNodes[0]);
                     Expresion r2 = EXPRESION(padre.ChildNodes[2]);
-                    exp = new Expresion(r1, r2, Expresion.getOperador(padre.ChildNodes[1].Token.Text), Expresion.Tipo_Operacion.ARITMETICA);
-                    break;
+                    return new Expresion(r1, r2, 
+                        Expresion.getOperador(padre.ChildNodes[1].Token.Text), 
+                        Expresion.Tipo_Operacion.ARITMETICA);
                 default:
-                    break;
+                    return null;
             }
-            return exp;
         }
 
         /**
@@ -97,13 +93,12 @@ namespace Xform.Arbol.Ast
          * */
         public Expresion RELACIONAL(ParseTreeNode padre)
         {
-            Expresion exp = null;
             //EXPRESION op EXPRESION
             Expresion r1 = EXPRESION(padre.ChildNodes[0]);
             Expresion r2 = EXPRESION(padre.ChildNodes[2]);
-            exp = new Expresion(r1, r2, Expresion.getOperador(padre.ChildNodes[1].Token.Text), Expresion.Tipo_Operacion.RELACIONAL);
-
-            return exp;
+            return new Expresion(r1, r2, 
+                Expresion.getOperador(padre.ChildNodes[1].Token.Text), 
+                Expresion.Tipo_Operacion.RELACIONAL);
         }
 
         /**
@@ -111,22 +106,21 @@ namespace Xform.Arbol.Ast
          * */
         public Expresion LOGICA(ParseTreeNode padre)
         {
-            Expresion exp = null;
             switch (padre.ChildNodes.Count)
             {
                 case 2:// not EXPRESION
                     Expresion r = EXPRESION(padre.ChildNodes[1]);
-                    exp = new Expresion(Expresion.getOperador(padre.ChildNodes[0].Token.Text), r, Expresion.Tipo_Operacion.LOGICO);
-                    break;
+                    return new Expresion(Expresion.getOperador(padre.ChildNodes[0].Token.Text), 
+                        r, Expresion.Tipo_Operacion.LOGICO);
                 case 3:// EXPRESION op EXPRESION
                     Expresion r1 = EXPRESION(padre.ChildNodes[0]);
                     Expresion r2 = EXPRESION(padre.ChildNodes[2]);
-                    exp = new Expresion(r1, r2, Expresion.getOperador(padre.ChildNodes[1].Token.Text), Expresion.Tipo_Operacion.LOGICO);
-                    break;
+                    return new Expresion(r1, r2, 
+                        Expresion.getOperador(padre.ChildNodes[1].Token.Text), 
+                        Expresion.Tipo_Operacion.LOGICO);
                 default:
-                    break;
+                    return null;
             }
-            return exp;
         }
 
         /**
@@ -134,19 +128,20 @@ namespace Xform.Arbol.Ast
          * devuleve un incremento o decremento
          * */
         public Expresion OPERADOR(ParseTreeNode padre)
-        {
-            Expresion exp = null;
+        {//operadores de incremento, decremento
             if (padre.ChildNodes[0].Term.Name.Equals("EXPRESION"))
             {// EXPRESION ( dmas | dmenos )
                 Expresion r = EXPRESION(padre.ChildNodes[0]);
-                exp = new Expresion(r, Expresion.getOperador(padre.ChildNodes[1].Token.Text), Expresion.Tipo_Operacion.ARITMETICA);
+                return new Expresion(r, 
+                    Expresion.getOperador(padre.ChildNodes[1].Token.Text), 
+                    Expresion.Tipo_Operacion.ARITMETICA);
             }
             else
             {// ( dmas | dmenos ) EXPRESION
                 Expresion r = EXPRESION(padre.ChildNodes[1]);
-                exp = new Expresion(Expresion.getOperador(padre.ChildNodes[0].Token.Text), r, Expresion.Tipo_Operacion.ARITMETICA);
+                return new Expresion(Expresion.getOperador(padre.ChildNodes[0].Token.Text), 
+                    r, Expresion.Tipo_Operacion.ARITMETICA);
             }
-            return exp;
         }
 
         /**
@@ -154,17 +149,17 @@ namespace Xform.Arbol.Ast
          * */
         public Expresion FACTOR(ParseTreeNode padre)
         {//cadena | entero | ddecimal | VBOOLEANO | fecha | hora | fechahora | id
-            Expresion exp = null;
             if (padre.ChildNodes[0].Term.Name.Equals("VBOOLEANO"))
             {
-                exp = VBOOLEANO(padre.ChildNodes[0]);
+                return VBOOLEANO(padre.ChildNodes[0]);
             }
             else
             {
-                exp = new Expresion(padre.ChildNodes[0].Token.Text, padre.ChildNodes[0].Token.Location.Line,
-                    padre.ChildNodes[0].Token.Location.Column, TipoDato.getTipo(padre.ChildNodes[0].Token.Terminal.Name));
+                return new Expresion(padre.ChildNodes[0].Token.Text, 
+                    padre.ChildNodes[0].Token.Location.Line,
+                    padre.ChildNodes[0].Token.Location.Column, 
+                    TipoDato.getTipo(padre.ChildNodes[0].Token.Terminal.Name));
             }
-            return exp;
         }
 
         /**
@@ -172,8 +167,10 @@ namespace Xform.Arbol.Ast
          * */
         public Expresion VBOOLEANO(ParseTreeNode padre)
         {//( verdadero | falso )
-            Expresion exp = new Expresion(padre.ChildNodes[0].Token.Text, padre.ChildNodes[0].Token.Location.Line,
-                    padre.ChildNodes[0].Token.Location.Column, TipoDato.getTipo(padre.ChildNodes[0].Token.Terminal.Name));
+            Expresion exp = new Expresion(padre.ChildNodes[0].Token.Text, 
+                padre.ChildNodes[0].Token.Location.Line,
+                padre.ChildNodes[0].Token.Location.Column, 
+                TipoDato.getTipo(padre.ChildNodes[0].Token.Terminal.Name));
             return exp;
         }
     
@@ -184,7 +181,7 @@ namespace Xform.Arbol.Ast
         {
             if (padre.ChildNodes[0].Term.Name.Equals("MLLAMADAS"))
             {//MLlamadas
-                return new Llamada(Llamada.Tipo_Llamada.LISTA, MLLAMADAS(padre.ChildNodes[0]));
+                return new Llamada(MLLAMADAS(padre.ChildNodes[0]));
             }
             else
             {//NLlamadas
@@ -231,7 +228,7 @@ namespace Xform.Arbol.Ast
                 case 4://pr_cadena + parizq + EXPRESION + parder
                     lista = new List<Expresion>();
                     lista.Add(EXPRESION(padre.ChildNodes[2]));
-                    llamada = new Llamada(Llamada.Tipo_Nativa.CADENA, lista);
+                    llamada = new Llamada(padre.ChildNodes[0].Term.Name, lista);
                     llamada.Linea = padre.ChildNodes[0].Token.Location.Line;
                     llamada.Columna = padre.ChildNodes[0].Token.Location.Column;
                     break;
@@ -239,7 +236,7 @@ namespace Xform.Arbol.Ast
                     lista = new List<Expresion>();
                     lista.Add(EXPRESION(padre.ChildNodes[2]));
                     lista.Add(EXPRESION(padre.ChildNodes[4]));
-                    llamada = new Llamada(Llamada.Tipo_Nativa.POSCAD, lista);
+                    llamada = new Llamada(padre.ChildNodes[0].Term.Name, lista);
                     llamada.Linea = padre.ChildNodes[0].Token.Location.Line;
                     llamada.Columna = padre.ChildNodes[0].Token.Location.Column;
                     break;
@@ -248,7 +245,7 @@ namespace Xform.Arbol.Ast
                     lista.Add(EXPRESION(padre.ChildNodes[2]));
                     lista.Add(EXPRESION(padre.ChildNodes[4]));
                     lista.Add(EXPRESION(padre.ChildNodes[6]));
-                    llamada = new Llamada(Llamada.Tipo_Nativa.SUBCAD, lista);
+                    llamada = new Llamada(padre.ChildNodes[0].Term.Name, lista);
                     llamada.Linea = padre.ChildNodes[0].Token.Location.Line;
                     llamada.Columna = padre.ChildNodes[0].Token.Location.Column;
                     break;
@@ -261,11 +258,31 @@ namespace Xform.Arbol.Ast
          * */
         public Llamada NATIVA_NUMERICA(ParseTreeNode padre)
         {
+            /**
+              pr_entero + parizq + LISTA_VAL_PARAMETROS + parder
+            | pr_min + parizq + LISTA_VAL_PARAMETROS + parder
+            | pr_max + parizq + LISTA_VAL_PARAMETROS + parder
+            | pr_random + parizq + LISTA_VAL_PARAMETROS + parder
+
+            | pr_pow + parizq + EXPRESION + tk_coma + EXPRESION + parder
+
+            | pr_tam + parizq + EXPRESION + parder
+            | pr_log + parizq + EXPRESION + parder
+            | pr_log10 + parizq + EXPRESION + parder
+            | pr_abs + parizq + EXPRESION + parder
+            | pr_sin + parizq + EXPRESION + parder
+            | pr_cos + parizq + EXPRESION + parder
+            | pr_tan + parizq + EXPRESION + parder
+            | pr_sqrt + parizq + EXPRESION + parder
+
+            | pr_pi + parizq + parder
+            | pr_random + parizq + parder
+            * */
             Llamada llamada = null;
             switch (padre.ChildNodes.Count)
             {
-                case 3:
-                    llamada = new Llamada(Llamada.getNativa(padre.ChildNodes[0].Term.Name), null);
+                case 3://pi, random
+                    llamada = new Llamada(padre.ChildNodes[0].Term.Name, new List<Expresion>());
                     break;
                 case 4:
                     if(padre.ChildNodes[0].Token.Text.ToLower().Equals("entero") ||
@@ -273,57 +290,93 @@ namespace Xform.Arbol.Ast
                         padre.ChildNodes[0].Token.Text.ToLower().Equals("max") ||
                         padre.ChildNodes[0].Token.Text.ToLower().Equals("min"))
                     {
-                        llamada = new Llamada(Llamada.getNativa(padre.ChildNodes[0].Term.Name), LISTA_VAL_PARAMETROS(padre.ChildNodes[2]));
+                        llamada = new Llamada(padre.ChildNodes[0].Term.Name, 
+                            LISTA_VAL_PARAMETROS(padre.ChildNodes[2]));
                     }
                     else
                     {
                         List<Expresion> lista = new List<Expresion>();
                         lista.Add(EXPRESION(padre.ChildNodes[2]));
-                        llamada = new Llamada(Llamada.getNativa(padre.ChildNodes[0].Term.Name), lista);
+                        llamada = new Llamada(padre.ChildNodes[0].Term.Name, lista);
                     }
                     break;
                 default:
                     List<Expresion> listas = new List<Expresion>();
                     listas.Add(EXPRESION(padre.ChildNodes[2]));
                     listas.Add(EXPRESION(padre.ChildNodes[4]));
-                    llamada = new Llamada(Llamada.getNativa(padre.ChildNodes[0].Term.Name), listas);
+                    llamada = new Llamada(padre.ChildNodes[0].Term.Name, listas);
                     break;
             }
             return llamada;
         }
 
+        /**
+         * Retorna la llamada nativa booleana
+         * */
         public Llamada NATIVA_BOOLEANA(ParseTreeNode padre)
         {//pr_booleano + parizq + EXPRESION + parder
             Llamada llamada;
             List<Expresion> lista = new List<Expresion>();
             lista.Add(EXPRESION(padre.ChildNodes[2]));
-            llamada = new Llamada(Llamada.Tipo_Nativa.BOOLEANO, lista);
+            llamada = new Llamada(padre.ChildNodes[0].Term.Name, lista);
             llamada.Linea = padre.ChildNodes[0].Token.Location.Line;
             llamada.Columna = padre.ChildNodes[0].Token.Location.Column;
             return llamada;
         }
 
+        /**
+         * Retorna la llamada nativa fechahora
+         * */
         public Llamada NATIVA_FECHAHORA(ParseTreeNode padre)
         {
+            /**
+            pr_hoy + parizq + parder
+            | pr_ahora + parizq + parder
+            | pr_fecha + parizq + EXPRESION + parder
+            | pr_hora + parizq + EXPRESION + parder
+            | pr_fechahora + parizq + EXPRESION + parder
+            * */
             Llamada llamada = null;
             List<Expresion> lista = new List<Expresion>();
             switch (padre.ChildNodes.Count)
             {
                 case 3:
-                    llamada = new Llamada(Llamada.getNativa(padre.ChildNodes[0].Term.Name), null);
+                    llamada = new Llamada(padre.ChildNodes[0].Term.Name, new List<Expresion>());
+                    llamada = new Llamada(padre.ChildNodes[0].Term.Name, lista);
+                    llamada.Linea = padre.ChildNodes[0].Token.Location.Line;
+                    llamada.Columna = padre.ChildNodes[0].Token.Location.Column;
                     break;
                 default:
                     lista.Add(EXPRESION(padre.ChildNodes[2]));
-                    llamada = new Llamada(Llamada.getNativa(padre.ChildNodes[0].Term.Name), lista);
+                    llamada = new Llamada(padre.ChildNodes[0].Term.Name, lista);
+                    llamada = new Llamada(padre.ChildNodes[0].Term.Name, lista);
+                    llamada.Linea = padre.ChildNodes[0].Token.Location.Line;
+                    llamada.Columna = padre.ChildNodes[0].Token.Location.Column;
                     break;
             }
             return llamada;
         }
 
+        /**
+         * Retorna la llamada nativa multimedia
+         * */
         public Llamada NATIVA_MULTIMEDIA(ParseTreeNode padre)
         {
-            return null;
+            /**
+            pr_imagen + parizq + EXPRESION + tk_coma + EXPRESION + parder
+            | pr_video + parizq + EXPRESION + tk_coma + EXPRESION + parder
+            | pr_audio + parizq + EXPRESION + tk_coma + EXPRESION + parder
+            * */
+            Llamada llamada = null;
+            List<Expresion> expresiones = new List<Expresion>();
+            expresiones.Add(EXPRESION(padre.ChildNodes[2]));
+            expresiones.Add(EXPRESION(padre.ChildNodes[4]));
+            llamada = new Llamada(padre.ChildNodes[0].Term.Name, expresiones);
+            llamada.Linea = padre.ChildNodes[0].Token.Location.Line;
+            llamada.Columna = padre.ChildNodes[0].Token.Location.Column;
+            return llamada;
         }
+
         /**
          * Retorna lista de llamadas
          * */
@@ -345,22 +398,19 @@ namespace Xform.Arbol.Ast
             Llamada llamada = null;
             switch (padre.ChildNodes.Count)
             {
-                case 1://( id | pr_este )
-                    if (padre.ChildNodes[0].Term.Name.Equals("ID"))
-                    {
-                        llamada = new Llamada(Llamada.Tipo_Llamada.ID, padre.ChildNodes[0].Token.Text);
-                        llamada.Linea = padre.ChildNodes[0].Token.Location.Line;
-                        llamada.Columna = padre.ChildNodes[0].Token.Location.Column;
-                    }
-                    else
-                    {
-                        llamada = new Llamada(Llamada.Tipo_Llamada.ESTE, padre.ChildNodes[0].Token.Text);
-                        llamada.Linea = padre.ChildNodes[0].Token.Location.Line;
-                        llamada.Columna = padre.ChildNodes[0].Token.Location.Column;
-                    }
+                case 1://id
+                    llamada = new Llamada(padre.ChildNodes[0].Token.Text);
+                    llamada.Linea = padre.ChildNodes[0].Token.Location.Line;
+                    llamada.Columna = padre.ChildNodes[0].Token.Location.Column;
                     break;
                 case 2://id + ACC_DIMENSIONES
                     llamada = new Llamada(Llamada.Tipo_Llamada.ARREGLO, padre.ChildNodes[0].Token.Text, ACC_DIMENSIONES(padre.ChildNodes[1]));
+                    llamada.Linea = padre.ChildNodes[0].Token.Location.Line;
+                    llamada.Columna = padre.ChildNodes[0].Token.Location.Column;
+                    break;
+                case 3://este . llamada
+                    llamada = new Llamada();
+                    llamada.setCLlamada(LLAMADA(padre.ChildNodes[2]));
                     llamada.Linea = padre.ChildNodes[0].Token.Location.Line;
                     llamada.Columna = padre.ChildNodes[0].Token.Location.Column;
                     break;

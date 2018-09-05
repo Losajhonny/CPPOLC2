@@ -105,8 +105,6 @@ namespace Xform.Analizador.Analisis
             CASO_VALOR = new NonTerminal("CASO_VALOR"),
             HACER = new NonTerminal("HACER"),
             DIMENSION = new NonTerminal("DIMENSION");
-
-            
         #endregion
         
         public Gramatica()
@@ -398,14 +396,15 @@ namespace Xform.Analizador.Analisis
              * LLamadas a funciones, id, clases, etc
              * */
             LLAMADAS.Rule = MLLAMADAS
-			            |  NLLAMADAS; // llamdas de funciones nativas
+			            |  NLLAMADAS
+                        ; // llamdas de funciones nativas
 
             MLLAMADAS.Rule = MakePlusRule(MLLAMADAS, tk_punto, LLAMADA);
 
             LLAMADA.Rule = id + parizq + LISTA_VAL_PARAMETROS + parder //llamada a un metodo
 			            | id + ACC_DIMENSIONES 				//llamada a un arreglo
-			            | id								//llamada a un atributo o declaracion
-			            | pr_este 							//llamada a su propia clase
+                        | pr_este + tk_punto + LLAMADA      //llamada a su propia clase
+			            | id								//llamada a un atributo o declaracion			            
 			            ;
 
             NLLAMADAS.Rule = NATIVA_CADENA
@@ -488,21 +487,19 @@ namespace Xform.Analizador.Analisis
              * Declaraciones
              * */
             DECLARACIONES.Rule = TIPO_DATO + VISIBILIDAD + id + tk_igual + pr_nuevo + TIPO_DATO + parizq + LISTA_PARAMETROS + parder
-                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tk_igual + pr_nuevo + TIPO_DATO + ACC_DIMENSIONES
-                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tk_igual + ASIG_DIMENSIONES
-                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tk_igual + EXPRESION
-                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tk_igual + pr_nulo
-                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES
                             | TIPO_DATO + VISIBILIDAD + id + tk_igual + pr_nulo
                             | TIPO_DATO + VISIBILIDAD + id + tk_igual + EXPRESION
                             | TIPO_DATO + VISIBILIDAD + id
+                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tk_igual + pr_nuevo + TIPO_DATO + ACC_DIMENSIONES
+                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES + tk_igual + ASIG_DIMENSIONES
+                            | TIPO_DATO + VISIBILIDAD + id + DIMENSIONES
 				            ;
 
 
             /**
              * Asignaciones
              * */
-            ASIGNACION.Rule = LLAMADAS + tk_igual + EXPRESION;
+            ASIGNACION.Rule = MLLAMADAS + tk_igual + EXPRESION;
 
 
             /**

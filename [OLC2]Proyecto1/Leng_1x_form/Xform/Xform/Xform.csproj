@@ -60,8 +60,10 @@
     <Compile Include="Arbol\OpExp\Expresion.cs" />
     <Compile Include="Arbol\OpExp\Logica.cs" />
     <Compile Include="Arbol\OpExp\Relacional.cs" />
+    <Compile Include="Arbol\Sentencia\SDeclaracion\Declaracion.cs" />
     <Compile Include="Arbol\Sentencia\Sentencia.cs" />
     <Compile Include="Arbol\Sentencia\SLlamada\Llamada.cs" />
+    <Compile Include="Arbol\Sentencia\SVisibilidad\Visibilidad.cs" />
     <Compile Include="Arbol\Sentencia\Tipo_Dato\TipoDato.cs" />
     <Compile Include="Gui\Principal.cs">
       <SubType>Form</SubType>

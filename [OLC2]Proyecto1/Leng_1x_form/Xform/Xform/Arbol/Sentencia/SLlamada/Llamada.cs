@@ -19,11 +19,16 @@ namespace Xform.Arbol.Sentencia.SLlamada
     class Llamada : Posicion
     {
         /**
-         * @call puntero a otra llamada. En una llamada puede ocurrir otra
-         * @lista lista de valores de parametros o lista de valores de dimensiones
+         * @expresiones         valores de acceso arreglo o de parametros
+         * @llamadas            cuando vienen con '.'
+         * @tllamada            especifica el tipo de llamada
+         * @tnativa             especifica el tipo de funcion nativa que se llama
+         * @id                  identificador de la llamada
          * */
         private List<Expresion> expresiones;
         private List<Llamada> llamadas;
+        private Llamada ceste;
+
         private Tipo_Llamada tllamada;
         private Tipo_Nativa tnativa;
 
@@ -31,16 +36,22 @@ namespace Xform.Arbol.Sentencia.SLlamada
 
         /**
          * Constructor para las llamadas nativas
+         * @tnativa         especifica que tipo de funcion nativa se ejecutara
+         * @expresiones     lista de valores de parametros para las funciones nativas
          * */
-        public Llamada(Tipo_Nativa tnativa, List<Expresion> expresiones)
+        public Llamada(string tnativa, List<Expresion> expresiones)
         {
-            this.tnativa = tnativa;
+            this.tnativa = getNativa(tnativa);
             this.expresiones = expresiones;
             this.tllamada = Tipo_Llamada.NATIVA;
         }
 
         /**
-         * Constructor de llamada de metodo, arreglo, id, este
+         * Constructor de llamada de metodo, arreglo
+         * @tllamada        tipo de llamada que se realiza
+         * @id              identificador de un metodo o arreglo
+         * @expresiones     son los valores de parametros para un metodo
+         *                  o acceso de dimensiones para un arreglo
          * */
         public Llamada(Tipo_Llamada tllamada, string id, List<Expresion> expresiones)
         {
@@ -52,21 +63,39 @@ namespace Xform.Arbol.Sentencia.SLlamada
 
         /**
          * Constructor de llamada de id
+         * aqui se le especifica que es una llamada a un id
+         * @id          identificador de la llamada de una variable o atributo
          * */
-        public Llamada(Tipo_Llamada tllamada, string id){
-            this.tllamada = tllamada;
+        public Llamada(string id){
+            this.tllamada = Tipo_Llamada.ID;
             this.id = id;
             this.tnativa = Tipo_Nativa.NINGUNO;
         }
 
         /**
+        * Constructor que se define para la palabra reservada Este
+        * */
+        public Llamada(){
+            this.tllamada = Tipo_Llamada.ESTE;
+            this.tnativa = Tipo_Nativa.NINGUNO;
+        }
+
+        /**
          * Constructor de llamada de otra llamada
+         * @llamadas        lista de llamadas por '.'
          * */
-        public Llamada(Tipo_Llamada tllamada, List<Llamada> llamadas)
+        public Llamada(List<Llamada> llamadas)
         {
-            this.tllamada = tllamada;
+            this.tllamada = Tipo_Llamada.LISTA;
             this.tnativa = Tipo_Nativa.NINGUNO;
             this.llamadas = llamadas;
+        }
+
+        /**
+        * Modifica el ceste de las llamadas
+        * */
+        public void setCLlamada(Llamada llamada){
+            this.ceste = llamada;
         }
 
         /**
@@ -74,12 +103,12 @@ namespace Xform.Arbol.Sentencia.SLlamada
          * */
         public enum Tipo_Llamada
         {
-            NATIVA,
-            ESTE,
             ID,
             ARREGLO,
             METODO,
-            LISTA
+            ESTE,
+            LISTA,
+            NATIVA
         }
 
         /**
@@ -122,7 +151,23 @@ namespace Xform.Arbol.Sentencia.SLlamada
          * */
         public static Tipo_Nativa getNativa(string value)
         {
-            if (value.ToLower().Equals("entero"))
+            if (value.ToLower().Equals("cadena"))
+            {
+                return Tipo_Nativa.CADENA;
+            }
+            else if (value.ToLower().Equals("subcad"))
+            {
+                return Tipo_Nativa.SUBCAD;
+            }
+            else if (value.ToLower().Equals("poscad"))
+            {
+                return Tipo_Nativa.POSCAD;
+            }
+            else if (value.ToLower().Equals("booleano"))
+            {
+                return Tipo_Nativa.BOOLEANO;
+            }
+            else if (value.ToLower().Equals("entero"))
             {
                 return Tipo_Nativa.ENTERO;
             }
@@ -194,9 +239,21 @@ namespace Xform.Arbol.Sentencia.SLlamada
             {
                 return Tipo_Nativa.HORA;
             }
-            else
+            else if (value.ToLower().Equals("fechahora"))
             {
                 return Tipo_Nativa.FECHAHORA;
+            }
+            else if (value.ToLower().Equals("imagen"))
+            {
+                return Tipo_Nativa.IMAGEN;
+            }
+            else if (value.ToLower().Equals("video"))
+            {
+                return Tipo_Nativa.VIDEO;
+            }
+            else
+            {
+                return Tipo_Nativa.AUDIO;
             }
         }
     }
