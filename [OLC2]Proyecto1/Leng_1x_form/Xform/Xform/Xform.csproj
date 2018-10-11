@@ -56,10 +56,7 @@
     <Compile Include="Analizador\Reportes\Reporte.cs" />
     <Compile Include="Analizador\Analisis\Sintactico.cs" />
     <Compile Include="Arbol\Ast\Arbols.cs" />
-    <Compile Include="Arbol\OpExp\Aritmetica.cs" />
     <Compile Include="Arbol\OpExp\Expresion.cs" />
-    <Compile Include="Arbol\OpExp\Logica.cs" />
-    <Compile Include="Arbol\OpExp\Relacional.cs" />
     <Compile Include="Arbol\Sentencia\SDeclaracion\Declaracion.cs" />
     <Compile Include="Arbol\Sentencia\Sentencia.cs" />
     <Compile Include="Arbol\Sentencia\SLlamada\Llamada.cs" />

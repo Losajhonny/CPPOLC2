@@ -1,0 +1,215 @@
+package Analizadores.DracoScript;
+
+import java_cup.runtime.*;
+
+parser code 
+{:
+    /**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/ 
+    public void syntax_error(Symbol s){ 
+        System.out.println("Error Sintáctico en la Línea " + (s.left) +
+        " Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
+    } 
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintáctico 
+     * en el que ya no es posible una recuperación de errores.
+     **/ 
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        System.out.println("Error síntactico irrecuperable en la Línea " + 
+        (s.left)+ " Columna "+s.right+". Componente " + s.value + 
+        " no reconocido."); 
+    }  
+:}
+
+//--------------------------------------------------------------------------------
+//---------------------------------- TERMINALES ----------------------------------
+//--------------------------------------------------------------------------------
+
+terminal String pr_var, pr_if, pr_not, pr_elif, pr_smash, pr_while,
+pr_for, pr_print, pr_runmultdasm, pr_point, pr_quadrate, pr_oval, 
+pr_string, pr_line, pr_true, pr_false;
+
+terminal String tk_mas, tk_menos, tk_division, tk_por, tk_potencia, 
+tk_modulo, tk_adicion, tk_sustraccion, tk_igualop, tk_diferente, 
+tk_menor, tk_mayor, tk_menorigual, tk_mayorigual, tk_and, tk_or, 
+tk_not, tk_igual, tk_ptcoma, tk_coma, tk_parizq, tk_parder, 
+tk_llaizq, tk_llader;
+
+terminal String tk_cadena, tk_caracter, tk_entero, tk_decimal, tk_id,
+tk_archivo;
+
+terminal String UMENOS;
+
+//--------------------------------------------------------------------------------
+//-------------------------------- NO TERMINALES ---------------------------------
+//--------------------------------------------------------------------------------
+
+non terminal Object S, INSTRUCCIONES, INSTRUCCION, DECLARACION, LISTA_VARIABLE, VARIABLE, 
+EXPRESION, ASIGNACION, IF, INS_IF, ELIF, IFNOT, VARIOS_ELIF, WHILE, FOR, VARIABLE_CONTROL,
+PRINT, RUNMULTDASM, LISTA_ARCHIVO, POINT, QUADRATE, OVAL, STRING, LINE;
+
+//--------------------------------------------------------------------------------
+//--------------------------------- PRECEDENCIA ----------------------------------
+//--------------------------------------------------------------------------------
+precedence left tk_or;
+precedence left tk_and;
+precedence left tk_igualop, tk_diferente;
+precedence left tk_menor, tk_mayor, tk_menorigual, tk_mayorigual;
+precedence left tk_mas, tk_menos;
+precedence left tk_division, tk_por, tk_modulo;
+
+precedence right UMENOS, tk_not, tk_adicion, tk_sustraccion, tk_potencia;
+precedence left pr_if;
+
+//--------------------------------------------------------------------------------
+//---------------------------------- GRAMATICA -----------------------------------
+//--------------------------------------------------------------------------------
+
+start with S;
+
+S 				::=	INSTRUCCIONES;
+
+//--------------------------------------------------------------------------------
+//--------------------------------- INSTRUCCIONES --------------------------------
+
+INSTRUCCIONES	::=	INSTRUCCIONES INSTRUCCION
+				|	INSTRUCCION
+				;
+
+INSTRUCCION 	::=	DECLARACION tk_ptcoma
+				|	ASIGNACION tk_ptcoma
+				|	IF
+				|	WHILE
+				|	FOR
+				|	PRINT tk_ptcoma
+				|	RUNMULTDASM tk_ptcoma
+				|	POINT tk_ptcoma
+				|	QUADRATE tk_ptcoma
+				|	OVAL tk_ptcoma
+				|	STRING tk_ptcoma
+				|	LINE tk_ptcoma
+				|	pr_smash tk_ptcoma
+				;
+
+//--------------------------------------------------------------------------------
+//---------------------------------- DECLARACION ---------------------------------
+
+DECLARACION		::=	pr_var LISTA_VARIABLE
+				;
+
+LISTA_VARIABLE 	::=	LISTA_VARIABLE tk_coma VARIABLE
+				|	VARIABLE
+				;
+
+VARIABLE 		::=	tk_id
+				|	tk_id tk_igual EXPRESION
+				;
+
+//--------------------------------------------------------------------------------
+//---------------------------------- ASIGNACION ----------------------------------
+
+ASIGNACION 		::=	tk_id tk_igual EXPRESION
+				;
+
+//--------------------------------------------------------------------------------
+//---------------------------------- EXPRESIONES ---------------------------------
+
+EXPRESION 		::=	EXPRESION tk_mas EXPRESION
+				|	EXPRESION tk_menos EXPRESION
+				| 	EXPRESION tk_por EXPRESION
+				| 	EXPRESION tk_division EXPRESION
+				| 	EXPRESION tk_potencia EXPRESION
+				|	EXPRESION tk_modulo EXPRESION
+				|	tk_menos EXPRESION %prec UMENOS
+				|	tk_mas EXPRESION
+				|	EXPRESION tk_igualop EXPRESION
+				|	EXPRESION tk_diferente EXPRESION
+				|	EXPRESION tk_menor EXPRESION
+				|	EXPRESION tk_mayor EXPRESION
+				|	EXPRESION tk_menorigual EXPRESION
+				|	EXPRESION tk_mayorigual EXPRESION
+				|	EXPRESION tk_and EXPRESION
+				|	EXPRESION tk_or EXPRESION
+				|	tk_not EXPRESION
+				|	EXPRESION tk_adicion
+				|	EXPRESION tk_sustraccion
+				|	tk_parizq EXPRESION tk_parder
+				|	tk_id
+				|	tk_entero
+				|	tk_decimal
+				|	tk_cadena
+				|	tk_caracter
+				|	pr_true
+				|	pr_false
+				;
+
+//--------------------------------------------------------------------------------
+//--------------------------------------- IF -------------------------------------
+
+IF 				::=	INS_IF
+				|	INS_IF VARIOS_ELIF
+				|	INS_IF VARIOS_ELIF IFNOT
+				|	INS_IF IFNOT
+				;
+
+INS_IF 			::=	pr_if tk_parizq EXPRESION tk_parder tk_llaizq INSTRUCCIONES tk_llader
+				;
+
+ELIF 			::=	pr_elif tk_parizq EXPRESION tk_parder tk_llaizq INSTRUCCIONES tk_llader
+				;
+
+VARIOS_ELIF		::=	VARIOS_ELIF ELIF
+				|	ELIF
+				;
+
+IFNOT 			::=	pr_if pr_not tk_llaizq INSTRUCCIONES tk_llader
+				;
+
+//--------------------------------------------------------------------------------
+//------------------------------------- WHILE ------------------------------------
+
+WHILE 			::=	pr_while tk_parizq EXPRESION tk_parder tk_llaizq INSTRUCCIONES tk_llader
+				;
+
+//--------------------------------------------------------------------------------
+//--------------------------------------- FOR ------------------------------------
+
+FOR 			::=	pr_for tk_parizq VARIABLE_CONTROL tk_ptcoma EXPRESION tk_ptcoma EXPRESION tk_parder tk_llaizq INSTRUCCIONES tk_llader
+				;
+
+VARIABLE_CONTROL ::= DECLARACION
+				|	ASIGNACION
+				;
+
+//--------------------------------------------------------------------------------
+//-------------------------------------- PRINT -----------------------------------
+
+PRINT 			::=	pr_print tk_parizq EXPRESION tk_parder
+				;
+
+//--------------------------------------------------------------------------------
+//-------------------------------- FUNCIONES NATIVAS -----------------------------
+
+RUNMULTDASM 	::=	pr_runmultdasm tk_parizq LISTA_ARCHIVO tk_parder
+				;
+
+LISTA_ARCHIVO	::=	LISTA_ARCHIVO tk_coma tk_archivo
+				|	tk_archivo
+				;
+
+POINT 			::=	pr_point tk_parizq EXPRESION tk_coma EXPRESION tk_coma EXPRESION tk_coma EXPRESION tk_parder
+				;
+
+QUADRATE 		::=	pr_quadrate tk_parizq EXPRESION tk_coma EXPRESION tk_coma EXPRESION tk_coma EXPRESION tk_coma EXPRESION tk_parder
+				;
+
+OVAL 			::=	pr_oval tk_parizq EXPRESION tk_coma EXPRESION tk_coma EXPRESION tk_coma EXPRESION tk_coma EXPRESION tk_parder
+				;
+
+STRING  		::=	pr_string tk_parizq EXPRESION tk_coma EXPRESION tk_coma EXPRESION tk_coma EXPRESION tk_parder
+				;
+
+LINE 			::= pr_line	tk_parizq EXPRESION tk_coma EXPRESION tk_coma EXPRESION tk_coma EXPRESION tk_coma EXPRESION tk_coma EXPRESION tk_parder
+				;

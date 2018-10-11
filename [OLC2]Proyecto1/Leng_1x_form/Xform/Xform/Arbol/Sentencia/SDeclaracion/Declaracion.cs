@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xform.Arbol.OpExp;
+using Xform.Arbol.Sentencia.SVisibilidad;
+using Xform.Arbol.Sentencia.Tipo_Dato;
 
 namespace Xform.Arbol.Sentencia.SDeclaracion
 {
@@ -16,6 +19,10 @@ namespace Xform.Arbol.Sentencia.SDeclaracion
 
     class Declaracion
     {
-        
+        private TipoDato.Tipo tipo;
+        private Visibilidad.Visibilidad visibilidad;
+        private string id;
+
+        private List<Expresion> dimensiones;
     }
 }

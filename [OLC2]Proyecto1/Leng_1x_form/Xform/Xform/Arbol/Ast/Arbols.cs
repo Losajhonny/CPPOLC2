@@ -75,16 +75,15 @@ namespace Xform.Arbol.Ast
             {
                 case 2:// ( tmenos | tmas ) EXPRESION   [Unarios]
                     Expresion r = EXPRESION(padre.ChildNodes[1]);
-                    return new Expresion(Expresion.getOperador(padre.ChildNodes[0].Token.Text), 
-                        r, Expresion.Tipo_Operacion.ARITMETICA);
-                case 3:// EXPRESION op EXPRESION
+                    return new Expresion(r,
+                        padre.ChildNodes[0].Token.Text, 
+                        Expresion.Tipo_Operacion.ARITMETICA);
+                default:// EXPRESION op EXPRESION
                     Expresion r1 = EXPRESION(padre.ChildNodes[0]);
                     Expresion r2 = EXPRESION(padre.ChildNodes[2]);
                     return new Expresion(r1, r2, 
-                        Expresion.getOperador(padre.ChildNodes[1].Token.Text), 
+                        padre.ChildNodes[1].Token.Text, 
                         Expresion.Tipo_Operacion.ARITMETICA);
-                default:
-                    return null;
             }
         }
 
@@ -97,7 +96,7 @@ namespace Xform.Arbol.Ast
             Expresion r1 = EXPRESION(padre.ChildNodes[0]);
             Expresion r2 = EXPRESION(padre.ChildNodes[2]);
             return new Expresion(r1, r2, 
-                Expresion.getOperador(padre.ChildNodes[1].Token.Text), 
+                padre.ChildNodes[1].Token.Text, 
                 Expresion.Tipo_Operacion.RELACIONAL);
         }
 
@@ -110,16 +109,15 @@ namespace Xform.Arbol.Ast
             {
                 case 2:// not EXPRESION
                     Expresion r = EXPRESION(padre.ChildNodes[1]);
-                    return new Expresion(Expresion.getOperador(padre.ChildNodes[0].Token.Text), 
-                        r, Expresion.Tipo_Operacion.LOGICO);
-                case 3:// EXPRESION op EXPRESION
+                    return new Expresion(r,
+                        padre.ChildNodes[0].Token.Text, 
+                        Expresion.Tipo_Operacion.LOGICO);
+                default:// EXPRESION op EXPRESION
                     Expresion r1 = EXPRESION(padre.ChildNodes[0]);
                     Expresion r2 = EXPRESION(padre.ChildNodes[2]);
                     return new Expresion(r1, r2, 
-                        Expresion.getOperador(padre.ChildNodes[1].Token.Text), 
+                        padre.ChildNodes[1].Token.Text, 
                         Expresion.Tipo_Operacion.LOGICO);
-                default:
-                    return null;
             }
         }
 
@@ -133,14 +131,15 @@ namespace Xform.Arbol.Ast
             {// EXPRESION ( dmas | dmenos )
                 Expresion r = EXPRESION(padre.ChildNodes[0]);
                 return new Expresion(r, 
-                    Expresion.getOperador(padre.ChildNodes[1].Token.Text), 
+                    padre.ChildNodes[1].Token.Text, 
                     Expresion.Tipo_Operacion.ARITMETICA);
             }
             else
             {// ( dmas | dmenos ) EXPRESION
                 Expresion r = EXPRESION(padre.ChildNodes[1]);
-                return new Expresion(Expresion.getOperador(padre.ChildNodes[0].Token.Text), 
-                    r, Expresion.Tipo_Operacion.ARITMETICA);
+                return new Expresion(r,
+                    padre.ChildNodes[0].Token.Text, 
+                    Expresion.Tipo_Operacion.ARITMETICA);
             }
         }
 

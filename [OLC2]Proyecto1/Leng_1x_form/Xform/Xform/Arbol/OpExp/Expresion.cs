@@ -17,7 +17,7 @@ namespace Xform.Arbol.OpExp
      * @facultad     : ingenieria
      * */
 
-    class Expresion : Posicion
+    class Expresion : Posicion, Sentencia.Sentencia
     {
         /**
          * @r1      operando izquierda
@@ -44,11 +44,11 @@ namespace Xform.Arbol.OpExp
         /**
          * Constructor para representar una expresion de 2 operandos
          * */
-        public Expresion(Expresion r1, Expresion r2, Operador operador, Tipo_Operacion operacion)
+        public Expresion(Expresion r1, Expresion r2, string operador, Tipo_Operacion operacion)
         {
             this.r1 = r1;
             this.r2 = r2;
-            this.operador = operador;
+            this.operador = getOperador(operador);
             this.operacion = operacion;
             this.tipo = TipoDato.Tipo.NINGUNO;
         }
@@ -56,21 +56,10 @@ namespace Xform.Arbol.OpExp
         /**
          * Constructor para representar una expresion de 1 operando
          * */
-        public Expresion(Expresion r1, Operador operador, Tipo_Operacion operacion)
+        public Expresion(Expresion r1, string operador, Tipo_Operacion operacion)
         {
             this.r1 = r1;
-            this.operador = operador;
-            this.operacion = operacion;
-            this.tipo = TipoDato.Tipo.NINGUNO;
-        }
-
-        /**
-         * Constructor para representar una expresion de 1 operando
-         * */
-        public Expresion(Operador operador, Expresion r2, Tipo_Operacion operacion)
-        {
-            this.r2 = r2;
-            this.operador = operador;
+            this.operador = getOperador(operador);
             this.operacion = operacion;
             this.tipo = TipoDato.Tipo.NINGUNO;
         }
@@ -222,5 +211,75 @@ namespace Xform.Arbol.OpExp
             }
             return Operador.NINGUNO;
         }
+
+        public object ejecutar()
+        {
+            Expresion a = r1 == null ? null : (Expresion)ejecutar();
+            Expresion b = r2 == null ? null : (Expresion)ejecutar();
+
+            switch (operacion)
+            {
+                case Tipo_Operacion.ARITMETICA:
+                    switch (operador)
+                    {
+                        case Operador.MAS:
+                            
+                            break;
+                        case Operador.MENOS:
+                            break;
+                        case Operador.POR:
+                            break;
+                        case Operador.POT:
+                            break;
+                        case Operador.DIV:
+                            break;
+                        case Operador.MOD:
+                            break;
+                        case Operador.DMAS:
+                            break;
+                        default: //Operador.DMENOS:
+                            break;
+                    }
+                    break;
+                case Tipo_Operacion.RELACIONAL:
+                    switch (operador)
+                    {
+                        case Operador.MAYOR:
+                            break;
+                        case Operador.MENOR:
+                            break;
+                        case Operador.MAY_IGUAL:
+                            break;
+                        case Operador.MEN_IGUAL:
+                            break;
+                        case Operador.DIFERENTE:
+                            break;
+                        default:// Operador.IGUAL:
+                            break;
+                    }
+                    break;
+                case Tipo_Operacion.LOGICO:
+                    switch (operador)
+                    {
+                        case Operador.AND:
+                            break;
+                        case Operador.OR:
+                            break;
+                        default:// Operador.NOT:
+                            break;
+                    }
+                    break;
+                case Tipo_Operacion.LLAMADA:
+                    return null;
+                default: //Tipo_Operacion.NINGUNO;
+                    if (tipo == TipoDato.Tipo.ID)
+                    {
+                        //buscar en la tabla de simbolos el valor y retornarlo como una expresion
+                    }
+                    return this;
+            }
+            return null;
+        }
+
     }
 }
